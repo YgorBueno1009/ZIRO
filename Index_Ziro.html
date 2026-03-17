@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZIRO — Tech Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0A0A0A; --surface:#111; --surface2:#181818; --surface3:#1F1F1F;
+  --border:#2A2A2A; --border2:#333;
+  --accent:#FF4D1C; --accent2:#FF7A50; --glow:rgba(255,77,28,.18);
+  --blue:#3B82F6; --green:#22C55E; --yellow:#F59E0B;
+  --text:#F0EDE8; --text2:#A0A0A0; --text3:#555;
+  --mono:'DM Mono',monospace; --sans:'DM Sans',sans-serif; --display:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px);pointer-events:none;z-index:9999}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ── PAGES ── */
+.page{display:none;animation:fadeUp .35s ease both}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:36px;font-family:var(--mono);font-size:11px;color:var(--text3)}
+.topbar-l{display:flex;gap:20px;align-items:center}
+.topbar-l span{display:flex;align-items:center;gap:5px}
+.dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.topbar-r{display:flex;gap:16px}
+.topbar-r a{color:var(--text3);text-decoration:none;transition:color .15s;cursor:pointer}
+.topbar-r a:hover{color:var(--accent)}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:0 32px;height:64px}
+.logo{font-family:var(--display);font-weight:800;font-size:26px;color:var(--text);letter-spacing:-2px;text-decoration:none;cursor:pointer;display:flex;flex-direction:row;align-items:baseline;gap:8px;line-height:1}
+.logo .r{color:var(--accent)}
+.logo-sub{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;font-weight:400}
+.search-bar{flex:1;max-width:540px;display:flex;border:1px solid var(--border2);border-radius:6px;overflow:hidden;background:var(--surface2);transition:border-color .2s,box-shadow .2s}
+.search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.search-bar select{background:transparent;border:none;outline:none;padding:0 12px;color:var(--text2);font-family:var(--mono);font-size:11px;cursor:pointer;border-right:1px solid var(--border)}
+.search-bar input{flex:1;background:transparent;border:none;outline:none;padding:11px 14px;font-size:13px;color:var(--text);font-family:var(--sans)}
+.search-bar input::placeholder{color:var(--text3)}
+.search-bar button{background:var(--accent);border:none;padding:0 20px;color:#fff;font-size:17px;cursor:pointer;transition:background .2s}
+.search-bar button:hover{background:var(--accent2)}
+.nav-right{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-icon-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;border:none;color:var(--text2);cursor:pointer;padding:7px 12px;border-radius:6px;transition:background .15s,color .15s;font-family:var(--mono);font-size:10px;position:relative}
+.nav-icon-btn .i{font-size:18px}
+.nav-icon-btn:hover{background:var(--surface2);color:var(--text)}
+.cart-badge{position:absolute;top:4px;right:6px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:9px 18px;border-radius:6px;font-family:var(--display);font-weight:700;font-size:12px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap}
+.btn-outline:hover{background:var(--accent);color:#fff}
+
+/* ── SUBNAV ── */
+.subnav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;height:44px;overflow-x:auto}
+.subnav::-webkit-scrollbar{height:0}
+.subnav a{text-decoration:none;color:var(--text2);font-family:var(--mono);font-size:11px;letter-spacing:.5px;padding:0 14px;height:44px;display:flex;align-items:center;gap:5px;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;cursor:pointer}
+.subnav a:hover,.subnav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.subnav-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+
+/* ── COMMON ── */
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:12px 26px;font-family:var(--display);font-weight:700;font-size:13px;cursor:pointer;transition:transform .15s,background .2s,box-shadow .2s;letter-spacing:.2px;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,77,28,.3);background:var(--accent2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:7px;padding:11px 20px;font-family:var(--sans);font-size:13px;cursor:pointer;transition:color .15s,border-color .15s}
+.btn-ghost:hover{color:var(--text);border-color:var(--text3)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:32px 32px 16px}
+.section-head h2{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--text);display:flex;align-items:center;gap:10px}
+.section-head h2::before{content:'';display:inline-block;width:3px;height:20px;background:var(--accent);border-radius:2px}
+.section-head .stag{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px}
+.see-all{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;cursor:pointer;transition:color .15s}
+.see-all:hover{color:var(--accent)}
+.page-wrap{padding:0 0 40px}
+
+/* ════════════════════════════
+   HOME PAGE
+════════════════════════════ */
+/* hero */
+.hero{margin:20px 32px;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:grid;grid-template-columns:1fr 400px;min-height:280px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 70% 50%,rgba(255,77,28,.05) 0%,transparent 70%),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.015) 40px,rgba(255,255,255,.015) 41px);pointer-events:none}
+.hero-left{padding:44px 50px;display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;z-index:1}
+.hero-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--accent);color:var(--accent);font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:5px 12px;border-radius:4px;width:fit-content;background:rgba(255,77,28,.06)}
+.hero-chip::before{content:'▶';font-size:8px}
+.hero h1{font-family:var(--display);font-size:44px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-2px}
+.hero h1 .hl{color:var(--accent)}
+.hero h1 .sm{font-size:26px;color:var(--text2)}
+.hero-meta{font-family:var(--mono);font-size:12px;color:var(--text3);display:flex;align-items:center;gap:14px}
+.hero-meta span{display:flex;align-items:center;gap:5px}
+.hero-meta span::before{content:'—';color:var(--accent)}
+.hero-actions{display:flex;gap:12px;align-items:center}
+.hero-right{background:var(--surface2);border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-right::before{content:'RTX';position:absolute;font-family:var(--display);font-size:130px;font-weight:800;color:rgba(255,255,255,.025);letter-spacing:-6px;pointer-events:none}
+.hero-mock{width:200px;height:200px;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border-radius:16px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:86px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(255,77,28,.08)}
+.hero-mock::after{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(255,77,28,.25),transparent 50%,rgba(59,130,246,.1));z-index:-1}
+.hero-ptag{position:absolute;bottom:20px;right:20px;background:var(--accent);color:#fff;padding:7px 14px;border-radius:8px;font-family:var(--display);font-weight:800;font-size:17px}
+.hero-ptag span{font-size:10px;display:block;font-family:var(--mono);opacity:.8}
+.hero-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.dot{width:6px;height:6px;border-radius:3px;background:var(--border2);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--accent);width:18px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:0 32px 20px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:background .2s}
+.stat:hover{background:var(--surface2)}
+.stat-icon{font-size:22px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:var(--surface3);border-radius:8px;border:1px solid var(--border2);flex-shrink:0}
+.stat-text strong{font-family:var(--display);font-size:13px;display:block;color:var(--text);margin-bottom:2px}
+.stat-text span{font-family:var(--mono);font-size:10px;color:var(--text3)}
+
+/* cats */
+.cats{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;margin:0 32px 28px}
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;text-align:center}
+.cat:hover{border-color:var(--accent);background:var(--surface2);transform:translateY(-3px)}
+.cat:hover .cat-icon{box-shadow:0 0 14px var(--glow)}
+.cat-icon{font-size:24px;width:46px;height:46px;background:var(--surface3);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);transition:box-shadow .2s}
+.cat-label{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:.3px}
+
+/* products */
+.products{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 32px 32px}
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .2s;position:relative;display:flex;flex-direction:column}
+.pcard:hover{border-color:var(--border2);box-shadow:0 12px 40px rgba(0,0,0,.4);transform:translateY(-4px)}
+.pcard:hover .wish{opacity:1}
+.wish{position:absolute;top:10px;right:10px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:opacity .2s,background .15s;z-index:2}
+.wish:hover{background:var(--surface3);border-color:var(--accent)}
+.pimg{aspect-ratio:1;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:54px;position:relative;border-bottom:1px solid var(--border);transition:background .2s}
+.pcard:hover .pimg{background:var(--surface3)}
+.pbadge{position:absolute;top:10px;left:10px;padding:3px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;letter-spacing:.5px}
+.pbadge.sale{background:var(--accent);color:#fff}
+.pbadge.new{background:var(--blue);color:#fff}
+.pbadge.hot{background:var(--yellow);color:#0A0A0A}
+.pbadge.free{background:var(--green);color:#0A0A0A}
+.pinfo{padding:14px;flex:1;display:flex;flex-direction:column}
+.pbrand{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.pname{font-size:13px;color:var(--text);line-height:1.45;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.pstars{color:var(--yellow);font-size:11px;margin-bottom:9px}
+.pstars span{color:var(--text3);margin-left:3px;font-family:var(--mono)}
+.pold{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:line-through;margin-bottom:3px}
+.pprice{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px}
+.pprice sup{font-size:13px}
+.pinstall{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:12px}
+.pinstall b{color:var(--green)}
+.padd{width:100%;background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px;border-radius:6px;font-family:var(--display);font-weight:600;font-size:12px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;letter-spacing:.3px}
+.padd:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* featured */
+.featured-row{display:grid;grid-template-columns:320px 1fr;gap:12px;margin:0 32px 32px}
+.fbig{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:border-color .2s;position:relative}
+.fbig::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--blue))}
+.fbig:hover{border-color:var(--accent)}
+.fbig-img{flex:1;min-height:190px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:90px;border-bottom:1px solid var(--border);position:relative}
+.fbig-ribbon{position:absolute;top:16px;left:-4px;background:var(--accent);color:#fff;font-family:var(--display);font-weight:800;font-size:12px;padding:6px 16px 6px 12px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 50%,100% 100%,0 100%)}
+.fbig-info{padding:18px}
+.fbig-info .brand{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:5px}
+.fbig-info h3{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:10px;line-height:1.3}
+.specs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.sc{font-family:var(--mono);font-size:10px;background:var(--surface3);border:1px solid var(--border2);color:var(--text2);padding:3px 8px;border-radius:4px}
+.fbig-old{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:line-through;margin-bottom:2px}
+.fbig-price{font-family:var(--display);font-size:26px;font-weight:800;color:var(--text);margin-bottom:12px}
+.fsmall-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+.fsmall{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;display:flex;transition:border-color .2s,transform .15s}
+.fsmall:hover{border-color:var(--border2);transform:translateY(-2px)}
+.fsmall-img{width:96px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:36px;border-right:1px solid var(--border);flex-shrink:0}
+.fsmall-info{padding:12px;display:flex;flex-direction:column;justify-content:center;gap:3px;flex:1}
+.fsmall-info .brand{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.fsmall-info h4{font-size:12px;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fsmall-info .fprice{font-family:var(--display);font-size:16px;font-weight:700;color:var(--accent);margin-top:4px}
+.fsmall-info .fold{font-family:var(--mono);font-size:10px;color:var(--text3);text-decoration:line-through}
+
+/* flash */
+.flash-wrap{margin:0 32px 32px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.flash-wrap::before{content:'FLASH';position:absolute;right:-8px;top:-24px;font-family:var(--display);font-size:130px;font-weight:800;color:rgba(255,77,28,.04);pointer-events:none}
+.flash-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.flash-title{font-family:var(--display);font-size:20px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.flash-title .bolt{color:var(--accent)}
+.flash-timer{display:flex;align-items:center;gap:6px;margin-left:auto}
+.tblock{background:var(--surface3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:20px;padding:6px 12px;border-radius:6px;min-width:46px;text-align:center;letter-spacing:1px}
+.tsep{color:var(--accent);font-weight:700;font-size:18px}
+.ftlabel{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px}
+.flash-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.fcard{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s}
+.fcard:hover{border-color:var(--accent);transform:translateY(-3px)}
+.fcard-img{aspect-ratio:1;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.fdiscount{position:absolute;bottom:0;left:0;right:0;background:var(--accent);color:#fff;font-family:var(--display);font-weight:800;font-size:14px;text-align:center;padding:4px}
+.fcard-info{padding:10px}
+.fcard-name{font-size:12px;color:var(--text2);margin-bottom:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fcard-old{font-family:var(--mono);font-size:10px;color:var(--text3);text-decoration:line-through}
+.fcard-price{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text)}
+
+/* banners */
+.banners{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:0 32px 32px}
+.banner{border-radius:10px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:156px;cursor:pointer;position:relative;overflow:hidden;border:1px solid var(--border);transition:transform .15s}
+.banner:hover{transform:translateY(-2px)}
+.banner.b1{background:linear-gradient(135deg,#0D1B6E,#1C3FFF)}
+.banner.b2{background:linear-gradient(135deg,#1A0800,#FF4D1C)}
+.banner.b3{background:var(--surface)}
+.banner::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.015) 10px,rgba(255,255,255,.015) 11px);pointer-events:none}
+.banner-tag{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px}
+.banner h3{font-family:var(--display);font-size:17px;font-weight:800;color:#fff;line-height:1.2;margin-top:6px}
+.banner p{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px}
+.banner-cta{background:rgba(255,255,255,.12);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:8px 16px;font-family:var(--display);font-size:12px;font-weight:700;cursor:pointer;width:fit-content;margin-top:14px;transition:background .2s}
+.banner-cta:hover{background:rgba(255,255,255,.22)}
+.banner.b3 h3{color:var(--text)}
+.banner.b3 p{color:var(--text2)}
+.banner.b3 .banner-tag{color:var(--text3)}
+.banner.b3 .banner-cta{background:var(--accent);border-color:var(--accent);color:#fff}
+.banner-icon{position:absolute;right:18px;bottom:18px;font-size:50px;opacity:.12;pointer-events:none}
+
+/* ════════════════════════════
+   PRODUCT PAGE
+════════════════════════════ */
+.breadcrumb{display:flex;align-items:center;gap:8px;padding:20px 32px 0;font-family:var(--mono);font-size:11px;color:var(--text3)}
+.breadcrumb a{color:var(--text3);text-decoration:none;cursor:pointer;transition:color .15s}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{color:var(--border2)}
+.breadcrumb .cur{color:var(--text2)}
+.product-layout{display:grid;grid-template-columns:1fr 440px;gap:32px;padding:20px 32px 40px}
+.product-gallery{display:flex;flex-direction:column;gap:12px}
+.main-img{background:var(--surface);border:1px solid var(--border);border-radius:12px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:140px;position:relative;overflow:hidden}
+.main-img::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,77,28,.04),transparent 70%)}
+.thumb-row{display:flex;gap:8px}
+.thumb{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:72px;height:72px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:border-color .2s}
+.thumb:hover,.thumb.active{border-color:var(--accent)}
+.product-info-col{display:flex;flex-direction:column;gap:0}
+.prod-badge-row{display:flex;gap:8px;margin-bottom:14px}
+.prod-badge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:.5px}
+.prod-badge.avail{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.prod-badge.launch{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.prod-brand{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.prod-title{font-family:var(--display);font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:12px}
+.prod-rating{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.stars-lg{color:var(--yellow);font-size:16px}
+.rating-num{font-family:var(--display);font-size:15px;font-weight:700}
+.rating-count{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.prod-price-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.prod-old{font-family:var(--mono);font-size:12px;color:var(--text3);text-decoration:line-through;margin-bottom:4px}
+.prod-price{font-family:var(--display);font-size:38px;font-weight:800;line-height:1;margin-bottom:6px}
+.prod-pix{font-family:var(--mono);font-size:12px;color:var(--green);margin-bottom:10px}
+.prod-install{font-family:var(--mono);font-size:12px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)}
+.prod-install b{color:var(--green)}
+.prod-options{margin-bottom:16px}
+.prod-options label{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;display:block;margin-bottom:8px}
+.option-chips{display:flex;gap:8px;flex-wrap:wrap}
+.opt-chip{background:var(--surface);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;padding:7px 14px;border-radius:6px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.opt-chip:hover,.opt-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,77,28,.05)}
+.prod-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.prod-actions .btn-primary{text-align:center;padding:14px}
+.prod-actions .btn-ghost{text-align:center;padding:13px}
+.prod-shipping{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.prod-shipping h4{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;margin-bottom:12px}
+.ship-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ship-row:last-child{border-bottom:none;padding-bottom:0}
+.ship-icon{font-size:18px;width:32px;text-align:center}
+.ship-info strong{font-size:12px;display:block;margin-bottom:1px}
+.ship-info span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.ship-info span b{color:var(--green)}
+.specs-section{padding:0 32px 40px}
+.specs-section h2{font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.specs-section h2::before{content:'';display:inline-block;width:3px;height:20px;background:var(--accent);border-radius:2px}
+.specs-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.spec-row{display:grid;grid-template-columns:200px 1fr;border-bottom:1px solid var(--border)}
+.spec-row:last-child{border-bottom:none}
+.spec-key{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.5px;padding:14px 20px;background:var(--surface2);border-right:1px solid var(--border)}
+.spec-val{font-size:13px;color:var(--text);padding:14px 20px}
+.related-section{padding:0 32px 40px}
+
+/* ════════════════════════════
+   PC BUILDER — FULL REDESIGN
+════════════════════════════ */
+.builder-hero{margin:20px 32px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px 48px;position:relative;overflow:hidden}
+.builder-hero::before{content:'BUILD';position:absolute;right:-20px;top:-20px;font-family:var(--display);font-size:130px;font-weight:800;color:rgba(255,77,28,.035);pointer-events:none;letter-spacing:-6px;line-height:1}
+.builder-hero::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+.builder-hero .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--blue);color:var(--blue);font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:5px 12px;border-radius:4px;background:rgba(59,130,246,.06);margin-bottom:14px}
+.builder-hero h1{font-family:var(--display);font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.builder-hero h1 span{color:var(--accent)}
+.builder-hero p{font-size:14px;color:var(--text2);max-width:600px;margin-bottom:16px}
+.builder-stats-row{display:flex;gap:20px;margin-top:4px}
+.bstat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;display:flex;flex-direction:column;gap:2px}
+.bstat-val{font-family:var(--display);font-size:18px;font-weight:800;color:var(--text)}
+.bstat-val.accent{color:var(--accent)}
+.bstat-val.green{color:var(--green)}
+.bstat-val.yellow{color:var(--yellow)}
+.bstat-lbl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px}
+.builder-layout{display:grid;grid-template-columns:1fr 360px;gap:20px;padding:0 32px 40px;align-items:start}
+.builder-slots{display:flex;flex-direction:column;gap:8px}
+
+/* slot */
+.slot{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.slot.filled{border-color:var(--border2)}
+.slot.filled:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.slot.slot-error{border-color:rgba(239,68,68,.5)!important;box-shadow:0 0 0 1px rgba(239,68,68,.2)!important}
+.slot.slot-warn{border-color:rgba(245,158,11,.4)!important}
+.slot-header{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;position:relative}
+.slot-num{font-family:var(--mono);font-size:10px;color:var(--text3);width:22px;text-align:center;flex-shrink:0}
+.slot-icon{font-size:22px;width:44px;height:44px;background:var(--surface3);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);flex-shrink:0;transition:border-color .2s,box-shadow .2s}
+.slot.filled .slot-icon{border-color:var(--accent);box-shadow:0 0 10px var(--glow)}
+.slot.slot-error .slot-icon{border-color:rgba(239,68,68,.5);box-shadow:0 0 8px rgba(239,68,68,.15)}
+.slot-meta{flex:1;min-width:0}
+.slot-cat{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.8px;margin-bottom:3px;text-transform:uppercase}
+.slot-name{font-size:13px;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot-empty{color:var(--text3);font-size:13px;font-style:italic}
+.slot-price{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text);flex-shrink:0;margin-left:8px}
+.slot-action{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;cursor:pointer;transition:all .15s;border:none}
+.slot-action.add{background:rgba(255,77,28,.1);color:var(--accent);border:1px solid rgba(255,77,28,.2)}
+.slot-action.add:hover{background:var(--accent);color:#fff;transform:scale(1.1)}
+.slot-action.rem{background:var(--surface3);color:var(--text3);border:1px solid var(--border)}
+.slot-action.rem:hover{background:rgba(239,68,68,.15);color:#ef4444;border-color:#ef4444}
+
+/* slot compat strip */
+.slot-compat{padding:10px 18px 12px 76px;border-top:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.slot-compat.ok-strip{background:rgba(34,197,94,.03)}
+.slot-compat.warn-strip{background:rgba(245,158,11,.03)}
+.slot-compat.err-strip{background:rgba(239,68,68,.03)}
+.compat-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;letter-spacing:.3px}
+.compat-badge.ok  {background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.compat-badge.warn{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.25)}
+.compat-badge.err {background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
+.compat-badge.rec {background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.compat-badge.btl {background:rgba(168,85,247,.1);color:#a855f7;border:1px solid rgba(168,85,247,.25)}
+
+/* compat codes */
+.compat-ok{font-family:var(--mono);font-size:11px;color:var(--green)}
+.compat-ok::before{content:'✓ '}
+.compat-warn{font-family:var(--mono);font-size:11px;color:var(--yellow)}
+.compat-warn::before{content:'⚠ '}
+
+/* sidebar */
+.builder-sidebar{display:flex;flex-direction:column;gap:14px;position:sticky;top:84px}
+.bsidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.bsidebar-card h3{font-family:var(--display);font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
+.bsidebar-card h3 .accent-bar{width:3px;height:14px;background:var(--accent);border-radius:2px;display:inline-block;flex-shrink:0}
+.budget-total{font-family:var(--display);font-size:34px;font-weight:800;color:var(--text);margin-bottom:2px;line-height:1}
+.budget-label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:12px}
+.budget-items{display:flex;flex-direction:column;gap:0}
+.bitem{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.bitem:last-child{border-bottom:none}
+.bitem .name{color:var(--text2);display:flex;align-items:center;gap:5px}
+.bitem .price{font-family:var(--mono);color:var(--text);font-size:11px}
+.bitem .price.empty{color:var(--text3)}
+.bitem .bdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.bitem .bdot.ok{background:var(--green)}
+.bitem .bdot.warn{background:var(--yellow)}
+.bitem .bdot.err{background:#ef4444}
+.bitem .bdot.empty{background:var(--border2)}
+
+/* power meter */
+.power-meter{margin-top:4px}
+.power-bar-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--border)}
+.power-bar-fill{height:100%;border-radius:4px;transition:width .6s ease,background .4s ease}
+.power-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:var(--text3)}
+.power-val{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)}
+.power-psu{font-family:var(--mono);font-size:11px;color:var(--text3)}
+
+/* compat panel */
+.compat-panel{display:flex;flex-direction:column;gap:2px;padding:0}
+.compat-line{display:flex;align-items:flex-start;gap:9px;padding:8px 12px;border-radius:7px;font-family:var(--mono);font-size:11px;background:var(--surface2);margin-bottom:3px;transition:background .2s}
+.compat-line:last-child{margin-bottom:0}
+.compat-line.ok-line  {background:rgba(34,197,94,.05)}
+.compat-line.warn-line{background:rgba(245,158,11,.05)}
+.compat-line.err-line {background:rgba(239,68,68,.05)}
+.compat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.compat-dot.ok  {background:var(--green);box-shadow:0 0 5px var(--green)}
+.compat-dot.warn{background:var(--yellow)}
+.compat-dot.err {background:#ef4444;box-shadow:0 0 5px #ef4444}
+.compat-dot.empty{background:var(--border2)}
+.cl-label{color:var(--text2);flex:1;line-height:1.4}
+.cl-label.ok  {color:var(--green)}
+.cl-label.warn{color:var(--yellow)}
+.cl-label.err {color:#ef4444}
+
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;width:760px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;animation:fadeUp .2s ease;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;gap:16px;padding:20px 24px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-family:var(--display);font-size:18px;font-weight:800;flex:1}
+.modal-head-sub{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px}
+.modal-close{background:var(--surface3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:7px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.modal-close:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.modal-legend{display:flex;gap:10px;padding:12px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.modal-legend-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--text3)}
+.modal-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.modal-body{overflow-y:auto;padding:14px 24px 20px;display:flex;flex-direction:column;gap:6px}
+.modal-item{display:flex;align-items:center;gap:14px;padding:13px 14px;background:var(--surface2);border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;position:relative}
+.modal-item:hover{border-color:var(--accent);background:var(--surface3)}
+.modal-item.mi-incompat{opacity:.55;border-color:rgba(239,68,68,.3)!important;background:rgba(239,68,68,.03)!important}
+.modal-item.mi-incompat:hover{opacity:.8}
+.modal-item.mi-rec{border-color:rgba(59,130,246,.35)!important}
+.modal-item-icon{font-size:32px;width:54px;height:54px;background:var(--surface3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.modal-item-info{flex:1;min-width:0}
+.modal-item-info .brand{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:2px}
+.modal-item-info .name{font-size:13px;color:var(--text);margin-bottom:5px;font-weight:500}
+.modal-item-info .specs{display:flex;gap:4px;flex-wrap:wrap}
+.sc{background:var(--surface3);border:1px solid var(--border);color:var(--text3);font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px}
+.modal-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+.modal-item-price{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text)}
+.mi-badge{font-family:var(--mono);font-size:9px;letter-spacing:.5px;padding:3px 9px;border-radius:4px;white-space:nowrap}
+.mi-badge.ok  {background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.mi-badge.err {background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.mi-badge.warn{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.3)}
+.mi-badge.rec {background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.3)}
+.mi-badge.btl {background:rgba(168,85,247,.1);color:#a855f7;border:1px solid rgba(168,85,247,.3)}
+.mi-badge.ins {background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
+.mi-reason{font-family:var(--mono);font-size:10px;color:var(--text3);max-width:160px;text-align:right;line-height:1.4}
+
+/* ════════════════════════════
+   TRADE-IN PAGE
+════════════════════════════ */
+.tradein-hero{margin:20px 32px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:44px 50px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:center}
+.tradein-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent)}
+.tradein-hero .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:5px 12px;border-radius:4px;background:rgba(34,197,94,.06);margin-bottom:14px}
+.tradein-hero h1{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;line-height:1.05}
+.tradein-hero h1 span{color:var(--green)}
+.tradein-hero p{font-size:14px;color:var(--text2);margin-bottom:20px}
+.tradein-hero-right{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.tradein-step-mini{display:flex;align-items:center;gap:12px}
+.tsm-num{width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green);font-family:var(--display);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tsm-text strong{font-size:13px;display:block;margin-bottom:1px}
+.tsm-text span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.tradein-flow{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:0 32px 40px}
+.tflow-left{display:flex;flex-direction:column;gap:16px}
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px}
+.tcard h3{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.tcard h3::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:inline-block}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-row label{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.5px}
+.form-row select,.form-row input,.form-row textarea{background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:11px 14px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.form-row select:focus,.form-row input:focus,.form-row textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.1)}
+.form-row textarea{resize:vertical;min-height:80px}
+.condition-chips{display:flex;gap:8px;flex-wrap:wrap}
+.cond-chip{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;padding:8px 14px;border-radius:7px;cursor:pointer;transition:all .15s;text-align:center}
+.cond-chip:hover,.cond-chip.active{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.07)}
+.tflow-right{display:flex;flex-direction:column;gap:16px}
+.value-preview{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center}
+.value-preview .vp-label{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;margin-bottom:12px}
+.value-preview .vp-val{font-family:var(--display);font-size:44px;font-weight:800;color:var(--green);line-height:1;margin-bottom:6px}
+.value-preview .vp-sub{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.value-preview .vp-bar{height:6px;background:var(--surface3);border-radius:3px;margin:16px 0 10px;overflow:hidden}
+.value-preview .vp-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:3px;transition:width .6s ease}
+.thistory{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px}
+.thistory h3{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.thistory h3::before{content:'';width:3px;height:16px;background:var(--text3);border-radius:2px;display:inline-block}
+.th-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.th-item:last-child{border-bottom:none;padding-bottom:0}
+.th-icon{font-size:24px;width:44px;height:44px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);flex-shrink:0}
+.th-info{flex:1}
+.th-info strong{font-size:13px;display:block;margin-bottom:2px}
+.th-info span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.th-credit{font-family:var(--display);font-size:15px;font-weight:700;color:var(--green);flex-shrink:0}
+.th-status{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.th-status.done{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.th-status.pend{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+.btn-green{background:var(--green);color:#0A0A0A;border:none;border-radius:7px;padding:13px 24px;font-family:var(--display);font-weight:700;font-size:14px;cursor:pointer;transition:transform .15s,box-shadow .2s;width:100%;margin-top:16px}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,197,94,.25)}
+
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:36px 32px 20px}
+.footer-grid{display:grid;grid-template-columns:200px 1fr 1fr 1fr;gap:36px;margin-bottom:28px}
+.footer-logo{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-2px;color:var(--text);display:block;margin-bottom:4px}
+.footer-logo .r{color:var(--accent)}
+.footer-tag{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:12px}
+.footer-desc{font-size:12px;color:var(--text3);line-height:1.7}
+footer h4{font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+footer ul li a{color:var(--text3);text-decoration:none;font-size:13px;cursor:pointer;transition:color .15s}
+footer ul li a:hover{color:var(--accent)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:16px;display:flex;align-items:center;justify-content:space-between}
+.footer-bottom span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.pay-row{display:flex;gap:5px}
+.pay{background:var(--surface2);border:1px solid var(--border);color:var(--text3);font-family:var(--mono);font-size:10px;padding:4px 9px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-l">
+    <span><span class="dot-live"></span> Sistema online</span>
+    <span>📦 +12.000 produtos em estoque</span>
+    <span>🚚 Frete grátis acima de R$199</span>
+  </div>
+  <div class="topbar-r">
+    <a onclick="navigate('home')">Rastrear pedido</a>
+    <a onclick="navigate('tradein')">Trade-in</a>
+    <a onclick="navigate('builder')">Montar PC</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" onclick="navigate('home')">ZI<span class="r">R</span>O<span class="logo-sub">tech store</span></a>
+  <div class="search-bar">
+    <select><option>TUDO</option><option>GPU</option><option>CPU</option><option>RAM</option><option>SSD</option><option>PERIFÉRICOS</option></select>
+    <input type="text" placeholder="RTX 5090, Ryzen 9, monitor 4K…">
+    <button>⌕</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-icon-btn"><span class="i">👤</span><span>Conta</span></button>
+    <button class="nav-icon-btn"><span class="i">🤍</span><span>Desejos</span></button>
+    <button class="nav-icon-btn" style="position:relative"><span class="i">🛒</span><span>Carrinho</span><span class="cart-badge">2</span></button>
+    <button class="btn-outline" onclick="navigate('builder')">⚙ Montar PC</button>
+  </div>
+</nav>
+
+<!-- SUBNAV -->
+<div class="subnav">
+  <a class="active" onclick="navigate('home')">⚡ Destaques</a>
+  <div class="subnav-sep"></div>
+  <a onclick="navigateCat('gpu')">🎮 Placas de Vídeo</a>
+  <a onclick="navigateCat('cpu')">⚙️ Processadores</a>
+  <a onclick="navigateCat('ram')">🧠 Memória RAM</a>
+  <a onclick="navigateCat('ssd')">💾 Armazenamento</a>
+  <a onclick="navigateCat('psu')">🔌 Fontes</a>
+  <a onclick="navigateCat('cool')">❄️ Refrigeração</a>
+  <div class="subnav-sep"></div>
+  <a onclick="navigateCat('periph')">🖱️ Periféricos</a>
+  <a onclick="navigateCat('monitor')">🖥 Monitores</a>
+  <a onclick="navigate('builder')">🔧 Montar PC</a>
+  <a onclick="navigate('tradein')">♻️ Trade-in</a>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE: HOME
+══════════════════════════════ -->
+<div class="page active" id="page-home">
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-left">
+      <div class="hero-chip">Lançamento 2026</div>
+      <h1><span class="sm">NVIDIA</span><br>RTX <span class="hl">5090</span><br>chegou.</h1>
+      <div class="hero-meta">
+        <span>32GB GDDR7</span><span>575W TDP</span><span>DLSS 4.0</span>
+      </div>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="navigate('product')">Ver produto →</button>
+        <button class="btn-ghost" onclick="navigate('builder')">Montar build</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-mock">🎮</div>
+      <div class="hero-ptag"><span>a partir de</span>R$ 7.999</div>
+    </div>
+    <div class="hero-dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-icon">🚚</div><div class="stat-text"><strong>Frete Grátis</strong><span>Acima de R$199</span></div></div>
+    <div class="stat"><div class="stat-icon">💳</div><div class="stat-text"><strong>12x Sem Juros</strong><span>Visa, Master, Elo</span></div></div>
+    <div class="stat"><div class="stat-icon">🛡️</div><div class="stat-text"><strong>Garantia +12m</strong><span>Em todos os produtos</span></div></div>
+    <div class="stat"><div class="stat-icon">⚡</div><div class="stat-text"><strong>Envio Rápido</strong><span>Pedidos até 18h saem hoje</span></div></div>
+  </div>
+
+  <!-- CATS -->
+  <div class="section-head">
+    <h2>Categorias <span class="stag">// 09 segmentos</span></h2>
+    <a class="see-all">Ver todas →</a>
+  </div>
+  <div class="cats">
+    <div class="cat" onclick="navigateCat('gpu')"><div class="cat-icon">🎮</div><span class="cat-label">Placas de Vídeo</span></div>
+    <div class="cat" onclick="navigateCat('cpu')"><div class="cat-icon">⚙️</div><span class="cat-label">Processadores</span></div>
+    <div class="cat" onclick="navigateCat('ram')"><div class="cat-icon">🧠</div><span class="cat-label">Memória RAM</span></div>
+    <div class="cat" onclick="navigateCat('ssd')"><div class="cat-icon">💾</div><span class="cat-label">SSD & NVMe</span></div>
+    <div class="cat" onclick="navigateCat('monitor')"><div class="cat-icon">🖥️</div><span class="cat-label">Monitores</span></div>
+    <div class="cat" onclick="navigateCat('periph')"><div class="cat-icon">⌨️</div><span class="cat-label">Teclados</span></div>
+    <div class="cat" onclick="navigateCat('periph')"><div class="cat-icon">🖱️</div><span class="cat-label">Mouses</span></div>
+    <div class="cat" onclick="navigateCat('periph')"><div class="cat-icon">🎧</div><span class="cat-label">Headsets</span></div>
+    <div class="cat" onclick="navigateCat('psu')"><div class="cat-icon">🔌</div><span class="cat-label">Fontes ATX</span></div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="section-head"><h2>Destaque da semana</h2><a class="see-all">Ver todos →</a></div>
+  <div class="featured-row">
+    <div class="fbig" onclick="navigate('product')">
+      <div class="fbig-img">🖥️<div class="fbig-ribbon">EDITOR'S PICK</div></div>
+      <div class="fbig-info">
+        <p class="brand">ASUS ROG</p>
+        <h3>Monitor ROG Swift OLED PG27AQDP 27" 360Hz</h3>
+        <div class="specs">
+          <span class="sc">27" OLED</span><span class="sc">360Hz</span><span class="sc">2560×1440</span><span class="sc">0.03ms</span><span class="sc">HDR600</span>
+        </div>
+        <p class="fbig-old">R$ 5.999,00</p>
+        <p class="fbig-price">R$ 4.749,00</p>
+        <button class="btn-primary" style="width:100%">Adicionar ao carrinho</button>
+      </div>
+    </div>
+    <div class="fsmall-grid">
+      <div class="fsmall" onclick="navigate('product')"><div class="fsmall-img">⚙️</div><div class="fsmall-info"><p class="brand">AMD</p><h4>Ryzen 9 9950X 16-Core AM5</h4><p class="fold">R$ 4.299</p><p class="fprice">R$ 3.649,00</p></div></div>
+      <div class="fsmall" onclick="navigate('product')"><div class="fsmall-img">🧠</div><div class="fsmall-info"><p class="brand">G.SKILL</p><h4>Trident Z5 RGB DDR5 32GB 6400MHz</h4><p class="fold">R$ 899</p><p class="fprice">R$ 749,00</p></div></div>
+      <div class="fsmall" onclick="navigate('product')"><div class="fsmall-img">💾</div><div class="fsmall-info"><p class="brand">Samsung</p><h4>SSD 990 Pro NVMe M.2 2TB 7450MB/s</h4><p class="fold">R$ 1.199</p><p class="fprice">R$ 849,00</p></div></div>
+      <div class="fsmall" onclick="navigate('product')"><div class="fsmall-img">🔌</div><div class="fsmall-info"><p class="brand">Corsair</p><h4>PSU RM1000x 1000W 80+ Gold Modular</h4><p class="fold">R$ 1.099</p><p class="fprice">R$ 879,00</p></div></div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="section-head"><h2>Mais vendidos</h2><a class="see-all">Ver todos →</a></div>
+  <div class="products">
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">🎮<span class="pbadge sale">-32%</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo"><p class="pbrand">ASUS / NVIDIA</p><p class="pname">RTX 4070 Ti Super ROG Strix OC 16GB GDDR6X</p><div class="pstars">★★★★★ <span>(1.432)</span></div><p class="pold">R$ 5.199,00</p><p class="pprice"><sup>R$</sup>3.539,00</p><p class="pinstall">12x de R$294,91 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div>
+    </div>
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">⚙️<span class="pbadge hot">TOP</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo"><p class="pbrand">Intel</p><p class="pname">Core Ultra 9 285K 24-Core 5.7GHz LGA1851</p><div class="pstars">★★★★☆ <span>(763)</span></div><p class="pold">R$ 3.899,00</p><p class="pprice"><sup>R$</sup>3.199,00</p><p class="pinstall">12x de R$266,58 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div>
+    </div>
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">⌨️<span class="pbadge new">NOVO</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo"><p class="pbrand">Keychron</p><p class="pname">Q3 Max QMK Wireless Alumínio Gateron Jupiter Red</p><div class="pstars">★★★★★ <span>(498)</span></div><p class="pold">R$ 1.099,00</p><p class="pprice"><sup>R$</sup>879,00</p><p class="pinstall">6x de R$146,50 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div>
+    </div>
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">🖱️<span class="pbadge free">Frete Grátis</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo"><p class="pbrand">Logitech</p><p class="pname">G Pro X Superlight 2 DEX Wireless 32K DPI</p><div class="pstars">★★★★★ <span>(2.109)</span></div><p class="pold">R$ 799,00</p><p class="pprice"><sup>R$</sup>619,00</p><p class="pinstall">6x de R$103,16 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div>
+    </div>
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">🎧<span class="pbadge sale">-28%</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo"><p class="pbrand">SteelSeries</p><p class="pname">Arctis Nova Pro Wireless + GameDAC Gen 2</p><div class="pstars">★★★★☆ <span>(671)</span></div><p class="pold">R$ 1.799,00</p><p class="pprice"><sup>R$</sup>1.295,00</p><p class="pinstall">10x de R$129,50 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div>
+    </div>
+  </div>
+
+  <!-- FLASH -->
+  <div class="flash-wrap">
+    <div class="flash-head">
+      <div class="flash-title"><span class="bolt">⚡</span> Flash Sale</div>
+      <div class="flash-timer">
+        <span class="ftlabel">ENCERRA EM</span>
+        <div class="tblock" id="fh">05</div><span class="tsep">:</span>
+        <div class="tblock" id="fm">47</div><span class="tsep">:</span>
+        <div class="tblock" id="fs">22</div>
+      </div>
+    </div>
+    <div class="flash-grid">
+      <div class="fcard" onclick="navigate('product')"><div class="fcard-img">💻<div class="fdiscount">-45%</div></div><div class="fcard-info"><p class="fcard-name">Notebook ASUS ROG Zephyrus G16 RTX 4080 240Hz</p><p class="fcard-old">R$ 15.999</p><p class="fcard-price">R$ 8.799,00</p></div></div>
+      <div class="fcard" onclick="navigate('product')"><div class="fcard-img">🖥️<div class="fdiscount">-38%</div></div><div class="fcard-info"><p class="fcard-name">Monitor LG UltraGear 32GQ850 4K 144Hz Nano IPS</p><p class="fcard-old">R$ 3.499</p><p class="fcard-price">R$ 2.169,00</p></div></div>
+      <div class="fcard" onclick="navigate('product')"><div class="fcard-img">🧠<div class="fdiscount">-52%</div></div><div class="fcard-info"><p class="fcard-name">Kit RAM Corsair Vengeance DDR5 64GB 6000MHz</p><p class="fcard-old">R$ 1.899</p><p class="fcard-price">R$ 911,00</p></div></div>
+      <div class="fcard" onclick="navigate('product')"><div class="fcard-img">❄️<div class="fdiscount">-41%</div></div><div class="fcard-info"><p class="fcard-name">Water Cooler Corsair iCUE H150i ELITE 360mm LCD</p><p class="fcard-old">R$ 1.299</p><p class="fcard-price">R$ 766,00</p></div></div>
+      <div class="fcard" onclick="navigate('product')"><div class="fcard-img">🏠<div class="fdiscount">-35%</div></div><div class="fcard-info"><p class="fcard-name">Gabinete Lian Li O11 Dynamic EVO Branco Full Tower</p><p class="fcard-old">R$ 1.099</p><p class="fcard-price">R$ 714,00</p></div></div>
+    </div>
+  </div>
+
+  <!-- BANNERS -->
+  <div class="banners">
+    <div class="banner b1" onclick="navigate('builder')">
+      <div><p class="banner-tag">// EXCLUSIVO ZIRO</p><h3>Monte seu PC customizado</h3><p>Selecione peça por peça — verificação de compatibilidade em tempo real.</p></div>
+      <button class="banner-cta">Iniciar montagem →</button>
+      <span class="banner-icon">🔧</span>
+    </div>
+    <div class="banner b2" onclick="navigate('tradein')">
+      <div><p class="banner-tag">// TRADE-IN</p><h3>Troque hardware antigo por crédito</h3><p>Avalie seu componente e receba crédito para upgrade imediato.</p></div>
+      <button class="banner-cta">Fazer Trade-in →</button>
+      <span class="banner-icon">♻️</span>
+    </div>
+    <div class="banner b3">
+      <div><p class="banner-tag">// ZIRO+</p><h3>Cashback em tudo</h3><p>5% de volta em cada compra, frete grátis ilimitado e acesso antecipado.</p></div>
+      <button class="banner-cta">Assinar por R$24,90/mês →</button>
+      <span class="banner-icon">⭐</span>
+    </div>
+  </div>
+
+</div>
+</div><!-- /page-home -->
+
+<!-- ══════════════════════════════
+     PAGE: PRODUCT
+══════════════════════════════ -->
+<div class="page" id="page-product">
+<div class="page-wrap">
+  <div class="breadcrumb">
+    <a onclick="navigate('home')">Home</a><span class="sep">/</span>
+    <a onclick="navigate('home')">Placas de Vídeo</a><span class="sep">/</span>
+    <span class="cur">ASUS ROG Strix RTX 4070 Ti Super OC 16GB</span>
+  </div>
+  <div class="product-layout">
+    <!-- gallery -->
+    <div class="product-gallery">
+      <div class="main-img" id="main-img-display">🎮</div>
+      <div class="thumb-row">
+        <div class="thumb active" onclick="selectThumb(this,'🎮')">🎮</div>
+        <div class="thumb" onclick="selectThumb(this,'📦')">📦</div>
+        <div class="thumb" onclick="selectThumb(this,'🔌')">🔌</div>
+        <div class="thumb" onclick="selectThumb(this,'📊')">📊</div>
+      </div>
+    </div>
+    <!-- info -->
+    <div class="product-info-col">
+      <div class="prod-badge-row">
+        <span class="prod-badge avail">● Em estoque</span>
+        <span class="prod-badge launch">Lançamento 2024</span>
+      </div>
+      <p class="prod-brand">ASUS / NVIDIA</p>
+      <h1 class="prod-title">ROG Strix RTX 4070 Ti Super OC Edition 16GB GDDR6X</h1>
+      <div class="prod-rating">
+        <span class="stars-lg">★★★★★</span>
+        <span class="rating-num">4.9</span>
+        <span class="rating-count">1.432 avaliações</span>
+      </div>
+      <div class="prod-price-box">
+        <p class="prod-old">R$ 5.199,00</p>
+        <p class="prod-price">R$ 3.539,00</p>
+        <p class="prod-pix">💚 R$ 3.362,05 no Pix (5% off)</p>
+        <div class="prod-install">12x de R$ 294,91 <b>sem juros</b> no cartão</div>
+      </div>
+      <div class="prod-options">
+        <label>MODELO</label>
+        <div class="option-chips">
+          <span class="opt-chip active">OC Edition</span>
+          <span class="opt-chip" onclick="toggleOpt(this)">Gaming X Trio</span>
+          <span class="opt-chip" onclick="toggleOpt(this)">Founders Edition</span>
+        </div>
+      </div>
+      <div class="prod-options">
+        <label>VRAM</label>
+        <div class="option-chips">
+          <span class="opt-chip active">16GB GDDR6X</span>
+        </div>
+      </div>
+      <div class="prod-actions">
+        <button class="btn-primary" onclick="addCart(this)">Adicionar ao carrinho</button>
+        <button class="btn-ghost" onclick="navigate('builder')">⚙ Adicionar ao Montador de PC</button>
+      </div>
+      <div class="prod-shipping">
+        <h4>ENVIO E GARANTIA</h4>
+        <div class="ship-row">
+          <span class="ship-icon">🚚</span>
+          <div class="ship-info"><strong>Frete Grátis</strong><span>Entrega em <b>1-3 dias úteis</b> para SP Capital</span></div>
+        </div>
+        <div class="ship-row">
+          <span class="ship-icon">🛡️</span>
+          <div class="ship-info"><strong>Garantia ZIRO</strong><span>24 meses + suporte técnico especializado</span></div>
+        </div>
+        <div class="ship-row">
+          <span class="ship-icon">↩️</span>
+          <div class="ship-info"><strong>Devolução Grátis</strong><span>30 dias sem burocracia</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECS -->
+  <div class="specs-section">
+    <h2>Especificações técnicas</h2>
+    <div class="specs-table">
+      <div class="spec-row"><span class="spec-key">GPU</span><span class="spec-val">NVIDIA GeForce RTX 4070 Ti Super</span></div>
+      <div class="spec-row"><span class="spec-key">VRAM</span><span class="spec-val">16 GB GDDR6X — 256-bit</span></div>
+      <div class="spec-row"><span class="spec-key">Clock Base / Boost</span><span class="spec-val">2340 MHz / 2670 MHz (OC Mode)</span></div>
+      <div class="spec-row"><span class="spec-key">CUDA Cores</span><span class="spec-val">8.448 cores</span></div>
+      <div class="spec-row"><span class="spec-key">Conectores</span><span class="spec-val">3× DisplayPort 1.4a · 1× HDMI 2.1</span></div>
+      <div class="spec-row"><span class="spec-key">TDP</span><span class="spec-val">285W</span></div>
+      <div class="spec-row"><span class="spec-key">Interface</span><span class="spec-val">PCIe 4.0 x16</span></div>
+      <div class="spec-row"><span class="spec-key">Alimentação</span><span class="spec-val">1× 16-pin (600W PSU recomendada)</span></div>
+      <div class="spec-row"><span class="spec-key">Dimensões</span><span class="spec-val">357 × 150 × 70mm — 3 slots</span></div>
+      <div class="spec-row"><span class="spec-key">Ray Tracing</span><span class="spec-val">4ª geração · DLSS 3.0 · Reflex</span></div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <div class="related-section">
+    <div class="section-head"><h2>Você também pode gostar</h2><a class="see-all">Ver todos →</a></div>
+    <div class="products">
+      <div class="pcard" onclick="navigate('product')"><div class="pimg">🎮<span class="pbadge new">NOVO</span></div><div class="pinfo"><p class="pbrand">NVIDIA</p><p class="pname">RTX 5080 Founders Edition 16GB GDDR7</p><div class="pstars">★★★★★ <span>(210)</span></div><p class="pold">R$ 7.999,00</p><p class="pprice"><sup>R$</sup>6.899,00</p><p class="pinstall">12x de R$574,91 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div></div>
+      <div class="pcard" onclick="navigate('product')"><div class="pimg">🔌<span class="pbadge sale">-20%</span></div><div class="pinfo"><p class="pbrand">Corsair</p><p class="pname">RM1000x 1000W 80+ Gold Full Modular ATX 3.0</p><div class="pstars">★★★★★ <span>(892)</span></div><p class="pold">R$ 1.099,00</p><p class="pprice"><sup>R$</sup>879,00</p><p class="pinstall">6x de R$146,50 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div></div>
+      <div class="pcard" onclick="navigate('product')"><div class="pimg">🏠<span class="pbadge free">Frete Grátis</span></div><div class="pinfo"><p class="pbrand">Lian Li</p><p class="pname">O11 Dynamic EVO RGB Full Tower Branco</p><div class="pstars">★★★★★ <span>(1.203)</span></div><p class="pold">R$ 1.099,00</p><p class="pprice"><sup>R$</sup>879,00</p><p class="pinstall">6x de R$146,50 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div></div>
+      <div class="pcard" onclick="navigate('product')"><div class="pimg">🖥️<span class="pbadge hot">TOP</span></div><div class="pinfo"><p class="pbrand">LG</p><p class="pname">UltraGear 27GP950-B 27" 4K 144Hz Nano IPS HDR</p><div class="pstars">★★★★☆ <span>(654)</span></div><p class="pold">R$ 3.299,00</p><p class="pprice"><sup>R$</sup>2.499,00</p><p class="pinstall">12x de R$208,25 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div></div>
+      <div class="pcard" onclick="navigate('product')"><div class="pimg">❄️</div><div class="pinfo"><p class="pbrand">Noctua</p><p class="pname">NH-D15 Chromax Black Dual Tower CPU Cooler AM5/LGA1851</p><div class="pstars">★★★★★ <span>(2.341)</span></div><p class="pold">R$ 699,00</p><p class="pprice"><sup>R$</sup>549,00</p><p class="pinstall">3x de R$183,00 <b>s/ juros</b></p><button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button></div></div>
+    </div>
+  </div>
+</div>
+</div><!-- /page-product -->
+
+<!-- ══════════════════════════════
+     CATEGORY PAGES (gpu, cpu, ram, ssd, psu, cool, periph, monitor)
+══════════════════════════════ -->
+<div class="page" id="page-cat">
+<div class="page-wrap">
+
+  <div style="padding:20px 32px 0;display:flex;align-items:center;justify-content:space-between">
+    <div class="breadcrumb" style="padding:0">
+      <a onclick="navigate('home')">Home</a><span class="sep">/</span>
+      <span class="cur" id="cat-title-bread">Categoria</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="cat-count">0 produtos</span>
+      <select style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:7px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;outline:none">
+        <option>Mais vendidos</option><option>Menor preço</option><option>Maior preço</option><option>Mais avaliados</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2 id="cat-title-h2">Categoria</h2>
+  </div>
+
+  <div class="products" id="cat-products-grid" style="margin-bottom:40px"></div>
+
+</div>
+</div><!-- /page-cat -->
+
+
+══════════════════════════════ -->
+<div class="page" id="page-builder">
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="builder-hero">
+    <div class="chip">⚙ MONTADOR DE PC · ZIRO</div>
+    <h1>Monte seu PC.<br><span>Compatibilidade</span> garantida.</h1>
+    <p>Selecione os componentes do catálogo ZIRO. O sistema verifica compatibilidade, consumo energético e gargalos em tempo real — antes de você comprar.</p>
+    <div class="builder-stats-row">
+      <div class="bstat"><span class="bstat-val accent" id="stat-total">R$ 8.176</span><span class="bstat-lbl">TOTAL DA BUILD</span></div>
+      <div class="bstat"><span class="bstat-val" id="stat-power">—W</span><span class="bstat-lbl">CONSUMO EST.</span></div>
+      <div class="bstat"><span class="bstat-val green" id="stat-psu-margin">—</span><span class="bstat-lbl">MARGEM FONTE</span></div>
+      <div class="bstat"><span class="bstat-val" id="stat-slots">3/8</span><span class="bstat-lbl">PEÇAS SELECIONADAS</span></div>
+    </div>
+  </div>
+
+  <div class="builder-layout">
+    <!-- SLOTS -->
+    <div class="builder-slots">
+
+      <div class="slot filled" id="slot-cpu">
+        <div class="slot-header" onclick="openModal('cpu')">
+          <span class="slot-num">01</span>
+          <div class="slot-icon">⚙️</div>
+          <div class="slot-meta">
+            <p class="slot-cat">PROCESSADOR</p>
+            <p class="slot-name">AMD Ryzen 9 9950X — 16 Cores 5.7GHz AM5</p>
+          </div>
+          <span class="slot-price">R$3.649</span>
+          <span class="slot-action rem" onclick="event.stopPropagation();removeSlot('cpu')">✕</span>
+        </div>
+        <div class="slot-compat ok-strip" id="compat-cpu">
+          <span class="compat-badge ok">✓ Socket AM5</span>
+          <span class="compat-badge ok">✓ TDP 170W</span>
+        </div>
+      </div>
+
+      <div class="slot filled" id="slot-mb">
+        <div class="slot-header" onclick="openModal('mb')">
+          <span class="slot-num">02</span>
+          <div class="slot-icon">🔲</div>
+          <div class="slot-meta">
+            <p class="slot-cat">PLACA-MÃE</p>
+            <p class="slot-name">ASUS ROG Crosshair X670E Hero — ATX AM5 DDR5</p>
+          </div>
+          <span class="slot-price">R$2.899</span>
+          <span class="slot-action rem" onclick="event.stopPropagation();removeSlot('mb')">✕</span>
+        </div>
+        <div class="slot-compat ok-strip" id="compat-mb">
+          <span class="compat-badge ok">✓ Socket AM5 compatível</span>
+          <span class="compat-badge ok">✓ DDR5 suportado</span>
+          <span class="compat-badge ok">✓ ATX</span>
+        </div>
+      </div>
+
+      <div class="slot filled" id="slot-ram">
+        <div class="slot-header" onclick="openModal('ram')">
+          <span class="slot-num">03</span>
+          <div class="slot-icon">🧠</div>
+          <div class="slot-meta">
+            <p class="slot-cat">MEMÓRIA RAM</p>
+            <p class="slot-name">G.Skill Trident Z5 RGB 32GB DDR5-6400 CL32</p>
+          </div>
+          <span class="slot-price">R$749</span>
+          <span class="slot-action rem" onclick="event.stopPropagation();removeSlot('ram')">✕</span>
+        </div>
+        <div class="slot-compat warn-strip" id="compat-ram">
+          <span class="compat-badge ok">✓ DDR5 compatível</span>
+          <span class="compat-badge warn">⚠ 32GB — considere 64GB para workstation</span>
+        </div>
+      </div>
+
+      <div class="slot" id="slot-gpu">
+        <div class="slot-header" onclick="openModal('gpu')">
+          <span class="slot-num">04</span>
+          <div class="slot-icon">🎮</div>
+          <div class="slot-meta">
+            <p class="slot-cat">PLACA DE VÍDEO</p>
+            <p class="slot-empty">Selecionar placa de vídeo →</p>
+          </div>
+          <span class="slot-price" style="color:var(--text3)">—</span>
+          <span class="slot-action add" onclick="event.stopPropagation();openModal('gpu')">+</span>
+        </div>
+      </div>
+
+      <div class="slot" id="slot-ssd">
+        <div class="slot-header" onclick="openModal('ssd')">
+          <span class="slot-num">05</span>
+          <div class="slot-icon">💾</div>
+          <div class="slot-meta">
+            <p class="slot-cat">ARMAZENAMENTO</p>
+            <p class="slot-empty">Selecionar SSD / HDD →</p>
+          </div>
+          <span class="slot-price" style="color:var(--text3)">—</span>
+          <span class="slot-action add" onclick="event.stopPropagation();openModal('ssd')">+</span>
+        </div>
+      </div>
+
+      <div class="slot filled" id="slot-psu">
+        <div class="slot-header" onclick="openModal('psu')">
+          <span class="slot-num">06</span>
+          <div class="slot-icon">🔌</div>
+          <div class="slot-meta">
+            <p class="slot-cat">FONTE DE ALIMENTAÇÃO</p>
+            <p class="slot-name">Corsair RM1000x 1000W 80+ Gold Full Modular</p>
+          </div>
+          <span class="slot-price">R$879</span>
+          <span class="slot-action rem" onclick="event.stopPropagation();removeSlot('psu')">✕</span>
+        </div>
+        <div class="slot-compat ok-strip" id="compat-psu">
+          <span class="compat-badge ok">✓ 1000W — selecione GPU para calcular margem</span>
+        </div>
+      </div>
+
+      <div class="slot" id="slot-cool">
+        <div class="slot-header" onclick="openModal('cool')">
+          <span class="slot-num">07</span>
+          <div class="slot-icon">❄️</div>
+          <div class="slot-meta">
+            <p class="slot-cat">COOLER / REFRIGERAÇÃO</p>
+            <p class="slot-empty">Selecionar cooler →</p>
+          </div>
+          <span class="slot-price" style="color:var(--text3)">—</span>
+          <span class="slot-action add" onclick="event.stopPropagation();openModal('cool')">+</span>
+        </div>
+      </div>
+
+      <div class="slot" id="slot-case">
+        <div class="slot-header" onclick="openModal('case')">
+          <span class="slot-num">08</span>
+          <div class="slot-icon">🏠</div>
+          <div class="slot-meta">
+            <p class="slot-cat">GABINETE</p>
+            <p class="slot-empty">Selecionar gabinete →</p>
+          </div>
+          <span class="slot-price" style="color:var(--text3)">—</span>
+          <span class="slot-action add" onclick="event.stopPropagation();openModal('case')">+</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="builder-sidebar">
+
+      <!-- Budget card -->
+      <div class="bsidebar-card">
+        <h3><span class="accent-bar"></span> Orçamento</h3>
+        <p class="budget-label">TOTAL ESTIMADO</p>
+        <p class="budget-total" id="budget-total">R$ 8.176,00</p>
+        <div class="budget-items" id="budget-items-list"></div>
+        <button class="btn-primary" style="width:100%;margin-top:16px;text-align:center" onclick="addCart(this)">🛒 Comprar tudo junto</button>
+        <button class="btn-ghost" style="width:100%;margin-top:8px;text-align:center">💾 Salvar build</button>
+      </div>
+
+      <!-- Power card -->
+      <div class="bsidebar-card">
+        <h3><span class="accent-bar" style="background:var(--yellow)"></span> Consumo Energético</h3>
+        <div class="power-meter">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+            <span class="power-val" id="pm-draw">—W</span>
+            <span class="power-psu" id="pm-psu">Fonte: —</span>
+          </div>
+          <div class="power-bar-track"><div class="power-bar-fill" id="pm-bar" style="width:0%;background:var(--green)"></div></div>
+          <div class="power-row">
+            <span id="pm-pct">—% utilizado</span>
+            <span id="pm-margin" style="color:var(--green)">—W livre</span>
+          </div>
+          <div id="pm-breakdown" style="margin-top:12px;display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:10px;color:var(--text3)"></div>
+        </div>
+      </div>
+
+      <!-- Compat card -->
+      <div class="bsidebar-card">
+        <h3><span class="accent-bar" style="background:var(--green)"></span> Compatibilidade</h3>
+        <div class="compat-panel" id="compat-panel-lines"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div><!-- /page-builder -->
+
+<!-- ══════════════════════════════
+     PAGE: TRADE-IN
+══════════════════════════════ -->
+<div class="page" id="page-tradein">
+<div class="page-wrap">
+
+  <div class="tradein-hero">
+    <div>
+      <div class="chip">♻ TRADE-IN ZIRO</div>
+      <h1>Seu hardware antigo<br>vira <span>crédito</span> agora.</h1>
+      <p>Envie seu componente usado, receba uma avaliação justa e use o crédito para fazer upgrade. Simples, rápido e sem burocracia.</p>
+      <div style="display:flex;gap:12px">
+        <button class="btn-primary">Avaliar meu hardware</button>
+        <button class="btn-ghost">Ver histórico</button>
+      </div>
+    </div>
+    <div class="tradein-hero-right">
+      <div class="tradein-step-mini"><div class="tsm-num">1</div><div class="tsm-text"><strong>Informe o hardware</strong><span>Categoria, modelo e estado</span></div></div>
+      <div class="tradein-step-mini"><div class="tsm-num">2</div><div class="tsm-text"><strong>Receba avaliação</strong><span>Estimativa em segundos</span></div></div>
+      <div class="tradein-step-mini"><div class="tsm-num">3</div><div class="tsm-text"><strong>Envie o produto</strong><span>Frete grátis com etiqueta ZIRO</span></div></div>
+      <div class="tradein-step-mini"><div class="tsm-num">4</div><div class="tsm-text"><strong>Receba o crédito</strong><span>Use em qualquer compra</span></div></div>
+    </div>
+  </div>
+
+  <div class="tradein-flow">
+    <div class="tflow-left">
+
+      <div class="tcard">
+        <h3>Informações do hardware</h3>
+        <div class="form-row">
+          <label>CATEGORIA</label>
+          <select id="ti-cat" onchange="updateEstimate()">
+            <option value="">Selecione a categoria…</option>
+            <option value="gpu">Placa de Vídeo (GPU)</option>
+            <option value="cpu">Processador (CPU)</option>
+            <option value="ram">Memória RAM</option>
+            <option value="ssd">SSD / HD</option>
+            <option value="notebook">Notebook</option>
+            <option value="monitor">Monitor</option>
+            <option value="periph">Periférico</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>MARCA / MODELO</label>
+          <input type="text" placeholder="Ex: NVIDIA RTX 3080 10GB" id="ti-model" oninput="updateEstimate()">
+        </div>
+        <div class="form-row">
+          <label>ANO DE COMPRA</label>
+          <select id="ti-year" onchange="updateEstimate()">
+            <option value="">Selecione…</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020 ou anterior</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>ESTADO DO PRODUTO</label>
+          <div class="condition-chips">
+            <span class="cond-chip active" onclick="selectCond(this,'perfeito')">Perfeito estado</span>
+            <span class="cond-chip" onclick="selectCond(this,'bom')">Bom estado</span>
+            <span class="cond-chip" onclick="selectCond(this,'regular')">Estado regular</span>
+            <span class="cond-chip" onclick="selectCond(this,'ruim')">Com defeito</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>OBSERVAÇÕES (opcional)</label>
+          <textarea placeholder="Descreva qualquer detalhe relevante sobre o produto…"></textarea>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <h3>Informações de envio</h3>
+        <div class="form-row">
+          <label>CEP</label>
+          <input type="text" placeholder="00000-000">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-row">
+            <label>NOME</label>
+            <input type="text" placeholder="Seu nome completo">
+          </div>
+          <div class="form-row">
+            <label>TELEFONE</label>
+            <input type="text" placeholder="(11) 99999-9999">
+          </div>
+        </div>
+        <button class="btn-green" onclick="addCart(this)">Confirmar Trade-in →</button>
+      </div>
+
+    </div>
+
+    <div class="tflow-right">
+
+      <div class="value-preview">
+        <p class="vp-label">ESTIMATIVA DE CRÉDITO</p>
+        <p class="vp-val" id="vp-value">R$ —</p>
+        <p class="vp-sub" id="vp-sub">Preencha o formulário para ver a estimativa</p>
+        <div class="vp-bar"><div class="vp-fill" id="vp-fill" style="width:0%"></div></div>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--text3)">Valor em relação ao preço de mercado</p>
+      </div>
+
+      <div class="tcard">
+        <h3 style="color:var(--text)">Como funciona o crédito</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px;width:32px;text-align:center;flex-shrink:0">💳</span>
+            <div><strong style="font-size:13px;display:block;margin-bottom:2px">Crédito na conta ZIRO</strong><span style="font-family:var(--mono);font-size:11px;color:var(--text3)">Use em qualquer produto do site, sem prazo de validade</span></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px;width:32px;text-align:center;flex-shrink:0">🔄</span>
+            <div><strong style="font-size:13px;display:block;margin-bottom:2px">Sem taxa de processamento</strong><span style="font-family:var(--mono);font-size:11px;color:var(--text3)">O crédito é 100% do valor avaliado</span></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:18px;width:32px;text-align:center;flex-shrink:0">📦</span>
+            <div><strong style="font-size:13px;display:block;margin-bottom:2px">Frete de envio grátis</strong><span style="font-family:var(--mono);font-size:11px;color:var(--text3)">Geramos a etiqueta de postagem para você</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="thistory">
+        <h3>Trade-ins anteriores</h3>
+        <div class="th-item">
+          <div class="th-icon">🧠</div>
+          <div class="th-info"><strong>G.Skill Trident Z DDR4 16GB</strong><span>Enviado em 12/01/2026</span></div>
+          <span class="th-credit">+ R$280</span>
+          <span class="th-status done">Concluído</span>
+        </div>
+        <div class="th-item">
+          <div class="th-icon">🎮</div>
+          <div class="th-info"><strong>RTX 3070 8GB Founders Edition</strong><span>Enviado em 03/11/2025</span></div>
+          <span class="th-credit">+ R$1.240</span>
+          <span class="th-status done">Concluído</span>
+        </div>
+        <div class="th-item">
+          <div class="th-icon">💾</div>
+          <div class="th-info"><strong>Samsung 970 EVO 1TB NVMe</strong><span>Aguardando recebimento</span></div>
+          <span class="th-credit">+ R$180</span>
+          <span class="th-status pend">Pendente</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div><!-- /page-tradein -->
+
+<!-- MODAL PICKER -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div style="flex:1">
+        <h2 id="modal-title">Selecionar componente</h2>
+        <p class="modal-head-sub" id="modal-head-sub">peças no catálogo ZIRO</p>
+      </div>
+      <div class="modal-legend" style="padding:0;border:none;flex-wrap:nowrap;gap:12px">
+        <span class="modal-legend-item"><span class="modal-legend-dot" style="background:var(--green)"></span>Compatível</span>
+        <span class="modal-legend-item"><span class="modal-legend-dot" style="background:var(--yellow)"></span>Atenção</span>
+        <span class="modal-legend-item"><span class="modal-legend-dot" style="background:#ef4444"></span>Incompatível</span>
+        <span class="modal-legend-item"><span class="modal-legend-dot" style="background:var(--blue)"></span>Recomendado</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <span class="footer-logo">ZI<span class="r">R</span>O</span>
+      <p class="footer-tag">// TECH STORE BR</p>
+      <p class="footer-desc">Especialistas em hardware, periféricos e eletrônicos com curadoria técnica em cada produto.</p>
+    </div>
+    <div><h4>Hardware</h4><ul><li><a onclick="navigate('product')">Placas de Vídeo</a></li><li><a onclick="navigate('product')">Processadores</a></li><li><a onclick="navigate('product')">Memória RAM</a></li><li><a onclick="navigate('product')">SSD & NVMe</a></li><li><a onclick="navigate('product')">Fontes ATX</a></li></ul></div>
+    <div><h4>Ferramentas</h4><ul><li><a onclick="navigate('builder')">Montador de PC</a></li><li><a onclick="navigate('tradein')">Trade-in</a></li><li><a onclick="navigate('product')">Comparador</a></li><li><a>ZIRO+</a></li><li><a>Blog Técnico</a></li></ul></div>
+    <div><h4>Suporte</h4><ul><li><a>Central de Ajuda</a></li><li><a>Rastrear Pedido</a></li><li><a>Garantia</a></li><li><a>Devoluções</a></li><li><a>Contato</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ZIRO Tech Store — CNPJ 00.000.000/0001-00</span>
+    <div class="pay-row">
+      <span class="pay">Visa</span><span class="pay">Master</span><span class="pay">Pix</span><span class="pay">Boleto</span><span class="pay">Elo</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAVIGATION ──
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.subnav a').forEach(a => a.classList.remove('active'));
+  if(page==='home') document.querySelector('.subnav a').classList.add('active');
+}
+
+// ── WISHLIST ──
+function toggleWish(btn) {
+  btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  btn.style.opacity = '1';
+}
+
+// ── ADD TO CART ──
+function addCart(btn) {
+  const orig = btn.textContent;
+  const origBg = btn.style.background;
+  btn.textContent = '✓ Adicionado!';
+  btn.style.background = 'var(--green)';
+  btn.style.borderColor = 'var(--green)';
+  btn.style.color = '#0A0A0A';
+  setTimeout(()=>{
+    btn.textContent = orig;
+    btn.style.background = origBg;
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }, 1600);
+}
+
+// ── PRODUCT THUMB ──
+function selectThumb(el, emoji) {
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('main-img-display').textContent = emoji;
+}
+
+// ── PRODUCT OPTS ──
+function toggleOpt(el) {
+  el.closest('.option-chips').querySelectorAll('.opt-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── COUNTDOWN ──
+let t = 5*3600+47*60+22;
+setInterval(()=>{
+  t = Math.max(0,t-1);
+  const h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
+  const fh=document.getElementById('fh'), fm=document.getElementById('fm'), fs=document.getElementById('fs');
+  if(fh) fh.textContent=String(h).padStart(2,'0');
+  if(fm) fm.textContent=String(m).padStart(2,'0');
+  if(fs) fs.textContent=String(s).padStart(2,'0');
+},1000);
+
+// ══════════════════════════════════════
+//  ZIRO PC BUILDER — ENGINE v2
+// ══════════════════════════════════════
+
+const CATALOG = {
+  cpu: [
+    {id:'cpu1',icon:'⚙️',brand:'AMD',   name:'Ryzen 9 9950X 16-Core 5.7GHz AM5',              specs:['AM5','DDR5','170W TDP'],     price:'R$3.649',val:3649, socket:'AM5',    ramType:'DDR5',tdp:170, formFact:'ATX', powerDraw:170},
+    {id:'cpu2',icon:'⚙️',brand:'AMD',   name:'Ryzen 7 9700X 8-Core 5.5GHz AM5 65W',           specs:['AM5','DDR5','65W TDP'],      price:'R$1.599',val:1599, socket:'AM5',    ramType:'DDR5',tdp:65,  formFact:'ATX', powerDraw:65},
+    {id:'cpu3',icon:'⚙️',brand:'AMD',   name:'Ryzen 5 9600X 6-Core 5.4GHz AM5',               specs:['AM5','DDR5','65W TDP'],      price:'R$1.099',val:1099, socket:'AM5',    ramType:'DDR5',tdp:65,  formFact:'ATX', powerDraw:65},
+    {id:'cpu4',icon:'⚙️',brand:'AMD',   name:'Ryzen 9 7900X3D 12-Core 5.6GHz AM5 3D Cache',   specs:['AM5','DDR5','120W TDP'],     price:'R$2.449',val:2449, socket:'AM5',    ramType:'DDR5',tdp:120, formFact:'ATX', powerDraw:120},
+    {id:'cpu5',icon:'⚙️',brand:'Intel', name:'Core Ultra 9 285K 24-Core 5.7GHz LGA1851',      specs:['LGA1851','DDR5','125W TDP'], price:'R$3.199',val:3199, socket:'LGA1851',ramType:'DDR5',tdp:125, formFact:'ATX', powerDraw:125},
+    {id:'cpu6',icon:'⚙️',brand:'Intel', name:'Core i9-14900KF 24-Core 6.0GHz LGA1700',        specs:['LGA1700','DDR5','125W TDP'], price:'R$2.249',val:2249, socket:'LGA1700',ramType:'DDR5',tdp:125, formFact:'ATX', powerDraw:125},
+    {id:'cpu7',icon:'⚙️',brand:'Intel', name:'Core i5-14600K 14-Core 5.3GHz LGA1700',         specs:['LGA1700','DDR5','125W TDP'], price:'R$1.349',val:1349, socket:'LGA1700',ramType:'DDR5',tdp:125, formFact:'ATX', powerDraw:125},
+    {id:'cpu8',icon:'⚙️',brand:'Intel', name:'Core i3-14100F 4-Core 4.7GHz LGA1700',          specs:['LGA1700','DDR4','58W TDP'],  price:'R$489',  val:489,  socket:'LGA1700',ramType:'DDR4',tdp:58,  formFact:'ATX', powerDraw:58},
+  ],
+  mb: [
+    {id:'mb1',icon:'🔲',brand:'ASUS ROG', name:'Crosshair X670E Hero ATX AM5 DDR5',            specs:['AM5','DDR5','ATX','PCIe5'], price:'R$2.899',val:2899, socket:'AM5',    ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe5'},
+    {id:'mb2',icon:'🔲',brand:'MSI',      name:'MAG X670E Tomahawk WiFi ATX AM5 DDR5',         specs:['AM5','DDR5','ATX','PCIe5'], price:'R$1.599',val:1599, socket:'AM5',    ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe5'},
+    {id:'mb3',icon:'🔲',brand:'Gigabyte', name:'B650 AORUS Elite AX ATX AM5 DDR5',             specs:['AM5','DDR5','ATX','PCIe4'], price:'R$1.199',val:1199, socket:'AM5',    ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe4'},
+    {id:'mb4',icon:'🔲',brand:'ASUS',     name:'ROG MAXIMUS Z890 APEX ATX LGA1851 DDR5',       specs:['LGA1851','DDR5','ATX','PCIe5'],price:'R$3.499',val:3499,socket:'LGA1851',ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe5'},
+    {id:'mb5',icon:'🔲',brand:'MSI',      name:'MEG Z890 ACE ATX LGA1851 DDR5',                specs:['LGA1851','DDR5','ATX','PCIe5'],price:'R$2.299',val:2299,socket:'LGA1851',ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe5'},
+    {id:'mb6',icon:'🔲',brand:'Gigabyte', name:'Z790 AORUS Elite AX ATX LGA1700 DDR5',         specs:['LGA1700','DDR5','ATX','PCIe4'],price:'R$1.399',val:1399,socket:'LGA1700',ramType:'DDR5',formFact:'ATX', nvme:true, sata:true, pcie:'PCIe4'},
+    {id:'mb7',icon:'🔲',brand:'ASRock',   name:'B760M Pro RS/D4 mATX LGA1700 DDR4',            specs:['LGA1700','DDR4','mATX','PCIe4'],price:'R$699', val:699,  socket:'LGA1700',ramType:'DDR4',formFact:'mATX',nvme:true, sata:true, pcie:'PCIe4'},
+    {id:'mb8',icon:'🔲',brand:'MSI',      name:'A620M Pro-VH mATX AM5 DDR5',                   specs:['AM5','DDR5','mATX','PCIe4'], price:'R$549',  val:549,  socket:'AM5',    ramType:'DDR5',formFact:'mATX',nvme:true, sata:true, pcie:'PCIe4'},
+  ],
+  ram: [
+    {id:'r1',icon:'🧠',brand:'G.Skill',  name:'Trident Z5 RGB DDR5 32GB 6400MHz CL32',         specs:['DDR5','32GB','6400MHz'], price:'R$749',  val:749,  ramType:'DDR5',gb:32, powerDraw:5},
+    {id:'r2',icon:'🧠',brand:'Corsair',  name:'Vengeance DDR5 64GB 6000MHz CL30',              specs:['DDR5','64GB','6000MHz'], price:'R$1.649',val:1649, ramType:'DDR5',gb:64, powerDraw:8},
+    {id:'r3',icon:'🧠',brand:'Kingston', name:'Fury Beast DDR5 32GB 5200MHz CL40 RGB',         specs:['DDR5','32GB','5200MHz'], price:'R$579',  val:579,  ramType:'DDR5',gb:32, powerDraw:5},
+    {id:'r4',icon:'🧠',brand:'G.Skill',  name:'Ripjaws S5 DDR5 64GB 6000MHz CL30',             specs:['DDR5','64GB','6000MHz'], price:'R$1.299',val:1299, ramType:'DDR5',gb:64, powerDraw:8},
+    {id:'r5',icon:'🧠',brand:'TeamGroup',name:'T-Force Delta RGB DDR5 32GB 7200MHz',           specs:['DDR5','32GB','7200MHz'], price:'R$699',  val:699,  ramType:'DDR5',gb:32, powerDraw:5},
+    {id:'r6',icon:'🧠',brand:'Corsair',  name:'Dominator Titanium DDR5 32GB 7200MHz White',    specs:['DDR5','32GB','7200MHz'], price:'R$1.099',val:1099, ramType:'DDR5',gb:32, powerDraw:5},
+    {id:'r7',icon:'🧠',brand:'Kingston', name:'Fury Renegade DDR5 32GB 7600MHz RGB',           specs:['DDR5','32GB','7600MHz'], price:'R$899',  val:899,  ramType:'DDR5',gb:32, powerDraw:5},
+    {id:'r8',icon:'🧠',brand:'Adata',    name:'XPG Lancer RGB DDR4 16GB 3600MHz CL18',         specs:['DDR4','16GB','3600MHz'], price:'R$299',  val:299,  ramType:'DDR4',gb:16, powerDraw:3},
+  ],
+  gpu: [
+    {id:'g1',icon:'🎮',brand:'NVIDIA',      name:'RTX 5090 32GB GDDR7 Founders Edition',       specs:['32GB GDDR7','575W','PCIe5'], price:'R$7.999', val:7999,  gpuPower:575, pcie:'PCIe5', powerDraw:575, tier:'flagship'},
+    {id:'g2',icon:'🎮',brand:'ASUS/NVIDIA', name:'RTX 4070 Ti Super ROG Strix OC 16GB',        specs:['16GB GDDR6X','285W','PCIe4'],price:'R$3.539', val:3539,  gpuPower:285, pcie:'PCIe4', powerDraw:285, tier:'high'},
+    {id:'g3',icon:'🎮',brand:'AMD',         name:'Radeon RX 7900 XTX 24GB GDDR6 Gaming OC',   specs:['24GB GDDR6','355W','PCIe4'], price:'R$3.299', val:3299,  gpuPower:355, pcie:'PCIe4', powerDraw:355, tier:'high'},
+    {id:'g4',icon:'🎮',brand:'MSI/NVIDIA',  name:'RTX 4060 Ti Gaming X Trio 16GB GDDR6',      specs:['16GB GDDR6','165W','PCIe4'], price:'R$1.899', val:1899,  gpuPower:165, pcie:'PCIe4', powerDraw:165, tier:'mid'},
+    {id:'g5',icon:'🎮',brand:'Gigabyte/AMD',name:'RX 7800 XT Gaming OC 16GB GDDR6',           specs:['16GB GDDR6','263W','PCIe4'], price:'R$1.749', val:1749,  gpuPower:263, pcie:'PCIe4', powerDraw:263, tier:'mid'},
+    {id:'g6',icon:'🎮',brand:'ZOTAC/NVIDIA',name:'RTX 4090 Trinity OC 24GB GDDR6X',           specs:['24GB GDDR6X','450W','PCIe4'],price:'R$10.499',val:10499, gpuPower:450, pcie:'PCIe4', powerDraw:450, tier:'flagship'},
+    {id:'g7',icon:'🎮',brand:'AMD',         name:'Radeon RX 7600 XT 16GB GDDR6',              specs:['16GB GDDR6','190W','PCIe4'], price:'R$1.199', val:1199,  gpuPower:190, pcie:'PCIe4', powerDraw:190, tier:'entry'},
+    {id:'g8',icon:'🎮',brand:'Sapphire/AMD',name:'Nitro+ RX 7900 GRE 16GB GDDR6',             specs:['16GB GDDR6','260W','PCIe4'], price:'R$2.399', val:2399,  gpuPower:260, pcie:'PCIe4', powerDraw:260, tier:'high'},
+  ],
+  ssd: [
+    {id:'s1',icon:'💾',brand:'Samsung',  name:'990 Pro NVMe M.2 2TB PCIe 4.0 — 7450MB/s',    specs:['2TB','NVMe M.2','PCIe 4.0'],price:'R$849',  val:849,  ssdType:'NVMe',powerDraw:6},
+    {id:'s2',icon:'💾',brand:'WD',       name:'Black SN850X 1TB NVMe M.2 — 7300MB/s',        specs:['1TB','NVMe M.2','PCIe 4.0'],price:'R$569',  val:569,  ssdType:'NVMe',powerDraw:5},
+    {id:'s3',icon:'💾',brand:'Kingston', name:'KC3000 4TB NVMe PCIe 4.0 — 7000MB/s',         specs:['4TB','NVMe M.2','PCIe 4.0'],price:'R$1.999',val:1999, ssdType:'NVMe',powerDraw:8},
+    {id:'s4',icon:'💾',brand:'Crucial',  name:'T700 2TB PCIe Gen5 NVMe — 12.400MB/s',        specs:['2TB','NVMe M.2','PCIe 5.0'],price:'R$1.499',val:1499, ssdType:'NVMe',powerDraw:7},
+    {id:'s5',icon:'💾',brand:'Seagate',  name:'BarraCuda 510 2TB NVMe M.2 PCIe 4.0',         specs:['2TB','NVMe M.2','PCIe 4.0'],price:'R$799',  val:799,  ssdType:'NVMe',powerDraw:5},
+    {id:'s6',icon:'💾',brand:'Seagate',  name:'BarraCuda HDD 4TB 3.5" SATA 5400RPM',         specs:['4TB','HDD 3.5"','SATA'],    price:'R$399',  val:399,  ssdType:'SATA',powerDraw:10},
+    {id:'s7',icon:'💾',brand:'WD',       name:'Blue 2TB 2.5" SATA SSD — 560MB/s',            specs:['2TB','SSD 2.5"','SATA'],    price:'R$549',  val:549,  ssdType:'SATA',powerDraw:3},
+    {id:'s8',icon:'💾',brand:'Samsung',  name:'870 EVO 4TB 2.5" SATA SSD — 560MB/s',         specs:['4TB','SSD 2.5"','SATA'],    price:'R$1.869',val:1869, ssdType:'SATA',powerDraw:3},
+  ],
+  psu: [
+    {id:'p1',icon:'🔌',brand:'Corsair',      name:'RM1000x 1000W 80+ Gold Full Modular ATX 3.0',specs:['1000W','80+ Gold','Full Mod.'],  price:'R$879',  val:879,  psuW:1000,cert:'Gold'},
+    {id:'p2',icon:'🔌',brand:'EVGA',         name:'SuperNOVA 1000 G7 1000W 80+ Gold Modular',  specs:['1000W','80+ Gold','Full Mod.'],  price:'R$949',  val:949,  psuW:1000,cert:'Gold'},
+    {id:'p3',icon:'🔌',brand:'Seasonic',     name:'Focus GX-850 850W 80+ Gold Full Modular',   specs:['850W','80+ Gold','Full Mod.'],   price:'R$749',  val:749,  psuW:850, cert:'Gold'},
+    {id:'p4',icon:'🔌',brand:'be quiet!',    name:'Dark Power 13 1000W 80+ Titanium Modular',  specs:['1000W','80+ Titanium','Full Mod.'],price:'R$1.599',val:1599,psuW:1000,cert:'Titanium'},
+    {id:'p5',icon:'🔌',brand:'Cooler Master',name:'V850 SFX Gold 850W 80+ Gold Full Modular',  specs:['850W','80+ Gold','SFX'],         price:'R$819',  val:819,  psuW:850, cert:'Gold'},
+    {id:'p6',icon:'🔌',brand:'Corsair',      name:'SF750 750W 80+ Platinum SFX Full Modular',  specs:['750W','80+ Platinum','SFX'],     price:'R$1.099',val:1099, psuW:750, cert:'Platinum'},
+    {id:'p7',icon:'🔌',brand:'Seasonic',     name:'Prime TX-1000 1000W 80+ Titanium Modular',  specs:['1000W','80+ Titanium','Full Mod.'],price:'R$1.759',val:1759,psuW:1000,cert:'Titanium'},
+    {id:'p8',icon:'🔌',brand:'EVGA',         name:'BQ 600W 80+ Bronze Semi Modular',           specs:['600W','80+ Bronze','Semi Mod.'], price:'R$374',  val:374,  psuW:600, cert:'Bronze'},
+  ],
+  cool: [
+    {id:'c1',icon:'❄️',brand:'Corsair',     name:'iCUE H150i Elite LCD XT 360mm AIO',          specs:['360mm AIO','AM4/AM5/LGA1700','~350W'],price:'R$999', val:999,  tdpMax:350,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:10,type:'AIO'},
+    {id:'c2',icon:'❄️',brand:'Noctua',      name:'NH-D15 Chromax Black Dual Tower',             specs:['Air Cooler','AM5/LGA1851','250W'],     price:'R$549', val:549,  tdpMax:250,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:0, type:'Air'},
+    {id:'c3',icon:'❄️',brand:'NZXT',        name:'Kraken Elite 360 RGB 360mm AIO LCD',          specs:['360mm AIO','AM5/LGA1851','~350W'],     price:'R$1.199',val:1199,tdpMax:350,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:10,type:'AIO'},
+    {id:'c4',icon:'❄️',brand:'be quiet!',   name:'Dark Rock Pro 5 Dual Tower 250W',             specs:['Air Cooler','AM5/LGA1851','250W'],     price:'R$509', val:509,  tdpMax:250,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:0, type:'Air'},
+    {id:'c5',icon:'❄️',brand:'Arctic',      name:'Liquid Freezer III 360 A-RGB AIO',            specs:['360mm AIO','AM5/LGA1851','~350W'],     price:'R$559', val:559,  tdpMax:350,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:10,type:'AIO'},
+    {id:'c6',icon:'❄️',brand:'DeepCool',    name:'AK620 Digital Dual Tower AM5',                specs:['Air Cooler','AM5/LGA1700','260W'],     price:'R$329', val:329,  tdpMax:260,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:0, type:'Air'},
+    {id:'c7',icon:'❄️',brand:'Lian Li',     name:'Galahad II Trinity SL 360mm AIO RGB',         specs:['360mm AIO','AM5/LGA1851','~350W'],     price:'R$999', val:999,  tdpMax:350,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:10,type:'AIO'},
+    {id:'c8',icon:'❄️',brand:'Thermalright',name:'Peerless Assassin 120 SE ARGB Dual Tower',    specs:['Air Cooler','AM5/LGA1700','280W'],     price:'R$209', val:209,  tdpMax:280,sockets:['AM4','AM5','LGA1700','LGA1851'],powerDraw:0, type:'Air'},
+  ],
+  case: [
+    {id:'cs1',icon:'🏠',brand:'Lian Li',      name:'O11 Dynamic EVO RGB Full Tower ATX',        specs:['Full Tower','ATX/E-ATX','RGB'],   price:'R$879',val:879,  formFact:'ATX', gpuMaxLen:420,powerDraw:5},
+    {id:'cs2',icon:'🏠',brand:'Fractal',       name:'Define 7 Compact Black Solid Mid Tower',    specs:['Mid Tower','ATX','Sound damp.'],  price:'R$699',val:699,  formFact:'ATX', gpuMaxLen:360,powerDraw:5},
+    {id:'cs3',icon:'🏠',brand:'NZXT',          name:'H9 Flow White Mid Tower Dual Chamber',      specs:['Mid Tower','ATX','Mesh'],         price:'R$849',val:849,  formFact:'ATX', gpuMaxLen:435,powerDraw:5},
+    {id:'cs4',icon:'🏠',brand:'Corsair',       name:'5000D Airflow Tempered Glass Mid Tower',    specs:['Mid Tower','ATX','Mesh'],         price:'R$749',val:749,  formFact:'ATX', gpuMaxLen:420,powerDraw:5},
+    {id:'cs5',icon:'🏠',brand:'Fractal',       name:'North Charcoal Black Mesh ATX',             specs:['Mid Tower','ATX','Wood accent'],  price:'R$699',val:699,  formFact:'ATX', gpuMaxLen:355,powerDraw:5},
+    {id:'cs6',icon:'🏠',brand:'Lian Li',       name:'LANCOOL III RGB E-ATX Mid Tower',           specs:['Mid Tower','E-ATX/ATX','RGB'],    price:'R$899',val:899,  formFact:'ATX', gpuMaxLen:435,powerDraw:5},
+    {id:'cs7',icon:'🏠',brand:'NZXT',          name:'H5 Flow Compact Mid Tower ATX',             specs:['Mid Tower','ATX','Mesh'],         price:'R$499',val:499,  formFact:'ATX', gpuMaxLen:365,powerDraw:5},
+    {id:'cs8',icon:'🏠',brand:'Cooler Master', name:'MasterBox Q500L mATX Mid Tower',            specs:['Mid Tower','mATX','Budget'],      price:'R$299',val:299,  formFact:'mATX',gpuMaxLen:280,powerDraw:3},
+  ],
+};
+
+const MODAL_TITLES = {cpu:'Selecionar Processador',mb:'Selecionar Placa-Mãe',ram:'Selecionar Memória RAM',gpu:'Selecionar Placa de Vídeo',ssd:'Selecionar Armazenamento',psu:'Selecionar Fonte de Alimentação',cool:'Selecionar Cooler',case:'Selecionar Gabinete'};
+
+// ── BUILD STATE ──
+const buildState = {
+  cpu:  CATALOG.cpu[0],
+  mb:   CATALOG.mb[0],
+  ram:  CATALOG.ram[0],
+  gpu:  null, ssd:null,
+  psu:  CATALOG.psu[0],
+  cool: null, case:null,
+};
+
+// ── POWER ──
+function calcPowerDraw() {
+  const b = buildState;
+  return {cpu:b.cpu?b.cpu.powerDraw:0, gpu:b.gpu?b.gpu.powerDraw:0, ram:b.ram?b.ram.powerDraw:0, ssd:b.ssd?b.ssd.powerDraw:0, cool:b.cool?b.cool.powerDraw:5, misc:30};
+}
+function totalPower() { return Object.values(calcPowerDraw()).reduce((a,v)=>a+v,0); }
+
+// ── COMPAT EVAL ──
+function evalItem(slot, item) {
+  const res = [];
+  const cpu  = slot==='cpu'  ? item : buildState.cpu;
+  const mb   = slot==='mb'   ? item : buildState.mb;
+  const ram  = slot==='ram'  ? item : buildState.ram;
+  const gpu  = slot==='gpu'  ? item : buildState.gpu;
+  const psu  = slot==='psu'  ? item : buildState.psu;
+  const cool = slot==='cool' ? item : buildState.cool;
+  const cas  = slot==='case' ? item : buildState.case;
+  const ssd  = slot==='ssd'  ? item : buildState.ssd;
+
+  if(cpu&&mb) {
+    if(cpu.socket!==mb.socket) res.push({type:'err',msg:`Socket incompatível: CPU ${cpu.socket} ≠ MB ${mb.socket}`});
+    else res.push({type:'ok',msg:`Socket ${cpu.socket} compatível`});
+  }
+  if(ram&&mb) {
+    if(ram.ramType!==mb.ramType) res.push({type:'err',msg:`RAM ${ram.ramType} incompatível com MB ${mb.ramType}`});
+    else res.push({type:'ok',msg:`${ram.ramType} suportado pela placa-mãe`});
+  }
+  if(ram&&cpu&&mb&&ram.ramType===mb.ramType) {
+    if(cpu.tdp>=120&&ram.gb<32) res.push({type:'warn',msg:`${ram.gb}GB pode limitar CPU de alto TDP`});
+    else if(ram.gb>=64) res.push({type:'rec',msg:`${ram.gb}GB — ideal para workstation`});
+  }
+  if(ssd&&mb) {
+    if(ssd.ssdType==='NVMe'&&!mb.nvme) res.push({type:'err',msg:`MB sem suporte NVMe`});
+    else if(ssd.ssdType==='SATA'&&!mb.sata) res.push({type:'err',msg:`MB sem suporte SATA`});
+    else res.push({type:'ok',msg:`${ssd.ssdType} suportado pela MB`});
+  }
+  if(cool&&cpu) {
+    if(!cool.sockets.includes(cpu.socket)) res.push({type:'err',msg:`Cooler não suporta socket ${cpu.socket}`});
+    else if(cool.tdpMax<cpu.tdp) res.push({type:'err',msg:`Cooler insuficiente: ${cool.tdpMax}W < TDP ${cpu.tdp}W`});
+    else if(cool.tdpMax<cpu.tdp*1.2) res.push({type:'warn',msg:`Cooler no limite: ${cool.tdpMax}W vs TDP ${cpu.tdp}W`});
+    else res.push({type:'ok',msg:`Refrigeração OK: ${cool.tdpMax}W > TDP ${cpu.tdp}W`});
+  }
+  if(cas&&mb) {
+    if(mb.formFact==='ATX'&&cas.formFact==='mATX') res.push({type:'err',msg:`Placa ATX não cabe em gabinete mATX`});
+    else res.push({type:'ok',msg:`Form factor ${mb.formFact} compatível`});
+  }
+  if(psu&&(cpu||gpu)) {
+    const draw=(cpu?cpu.powerDraw:0)+(gpu?gpu.powerDraw:0)+(ram?ram.powerDraw:0)+(ssd?ssd.powerDraw:0)+(cool?cool.powerDraw:5)+30;
+    const margin=psu.psuW-draw, pct=Math.round((draw/psu.psuW)*100);
+    if(margin<0) res.push({type:'ins',msg:`Fonte ${psu.psuW}W insuficiente (~${draw}W necessário)`});
+    else if(pct>85) res.push({type:'warn',msg:`Fonte acima de 85% de carga (${pct}%) — risco`});
+    else if(pct<=60) res.push({type:'rec',msg:`Fonte com boa margem: ${margin}W livre`});
+    else res.push({type:'ok',msg:`Fonte OK: ${margin}W livre (${pct}%)`});
+  }
+  if(gpu&&mb) {
+    if(gpu.pcie==='PCIe5'&&mb.pcie==='PCIe4') res.push({type:'warn',msg:`GPU PCIe 5.0 em slot 4.0 — funciona, banda ligeiramente reduzida`});
+    else res.push({type:'ok',msg:`Interface PCIe compatível`});
+  }
+  if(cpu&&gpu&&gpu.tier==='flagship'&&cpu.tdp<100) res.push({type:'btl',msg:`Possível gargalo: CPU de baixo TDP com GPU flagship`});
+  return res;
+}
+
+function overallStatus(evals) {
+  if(evals.some(e=>e.type==='err'||e.type==='ins')) return 'err';
+  if(evals.some(e=>e.type==='warn'||e.type==='btl')) return 'warn';
+  return 'ok';
+}
+
+function getBadge(slot, item, evals, status) {
+  if(slot==='psu') {
+    if(evals.some(e=>e.type==='ins')) return {cls:'ins',label:'⚡ Potência insuficiente'};
+    if(evals.some(e=>e.type==='warn')) return {cls:'warn',label:'⚠ Atenção'};
+    if(evals.some(e=>e.type==='rec')) return {cls:'rec',label:'★ Recomendado'};
+    if(buildState.cpu||buildState.gpu) return {cls:'ok',label:'✓ Compatível'};
+    return {cls:'ok',label:'✓ Disponível'};
+  }
+  if(status==='err') return {cls:'err',label:'✕ Incompatível'};
+  if(evals.some(e=>e.type==='btl')) return {cls:'btl',label:'⚡ Possível gargalo'};
+  if(evals.some(e=>e.type==='rec')) return {cls:'rec',label:'★ Recomendado'};
+  if(status==='warn') return {cls:'warn',label:'⚠ Atenção'};
+  return {cls:'ok',label:'✓ Compatível'};
+}
+
+// ── MODAL ──
+let currentSlot = '';
+function openModal(slot) {
+  currentSlot = slot;
+  const items = CATALOG[slot]; if(!items) return;
+  document.getElementById('modal-title').textContent = MODAL_TITLES[slot]||'Selecionar';
+  document.getElementById('modal-head-sub').textContent = items.length+' peças no catálogo ZIRO';
+  const body = document.getElementById('modal-body');
+  body.innerHTML = items.map(item=>{
+    const evals=evalItem(slot,item), status=overallStatus(evals), badge=getBadge(slot,item,evals,status);
+    const isIncompat=evals.some(e=>e.type==='err'||e.type==='ins');
+    const isRec=evals.some(e=>e.type==='rec')&&!isIncompat;
+    const reason=evals.length?evals[0].msg:'';
+    return `<div class="modal-item${isIncompat?' mi-incompat':''}${isRec?' mi-rec':''}" onclick="selectComponent('${slot}','${item.id}')">
+      <div class="modal-item-icon">${item.icon}</div>
+      <div class="modal-item-info">
+        <p class="brand">${item.brand}</p>
+        <p class="name">${item.name}</p>
+        <div class="specs">${item.specs.map(s=>`<span class="sc">${s}</span>`).join('')}</div>
+      </div>
+      <div class="modal-item-right">
+        <span class="modal-item-price">${item.price}</span>
+        <span class="mi-badge ${badge.cls}">${badge.label}</span>
+        ${reason?`<span class="mi-reason">${reason}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if(!e||e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function selectComponent(slot, itemId) {
+  const item=CATALOG[slot].find(i=>i.id===itemId); if(!item) return;
+  buildState[slot]=item;
+  const el=document.getElementById('slot-'+slot);
+  el.classList.add('filled'); el.classList.remove('slot-error','slot-warn');
+  const nameEl=el.querySelector('.slot-name')||el.querySelector('.slot-empty');
+  nameEl.outerHTML=`<p class="slot-name">${item.name}</p>`;
+  el.querySelector('.slot-price').textContent=item.price;
+  el.querySelector('.slot-price').style.color='';
+  const act=el.querySelector('.slot-action');
+  act.className='slot-action rem'; act.textContent='✕';
+  act.onclick=(e)=>{e.stopPropagation();removeSlot(slot)};
+  closeModal(); refreshAll();
+}
+
+function removeSlot(slot) {
+  buildState[slot]=null;
+  const el=document.getElementById('slot-'+slot);
+  el.classList.remove('filled','slot-error','slot-warn');
+  const empts={cpu:'Selecionar processador →',mb:'Selecionar placa-mãe →',gpu:'Selecionar placa de vídeo →',ssd:'Selecionar SSD / HDD →',cool:'Selecionar cooler →',case:'Selecionar gabinete →',ram:'Selecionar memória RAM →',psu:'Selecionar fonte →'};
+  const nm=el.querySelector('.slot-name'); if(nm) nm.outerHTML=`<p class="slot-empty">${empts[slot]||'Selecionar →'}</p>`;
+  el.querySelector('.slot-price').textContent='—'; el.querySelector('.slot-price').style.color='var(--text3)';
+  const act=el.querySelector('.slot-action');
+  act.className='slot-action add'; act.textContent='+';
+  act.onclick=(e)=>{e.stopPropagation();openModal(slot)};
+  const cp=el.querySelector('.slot-compat'); if(cp) cp.remove();
+  refreshAll();
+}
+
+// ── REFRESH ──
+function refreshAll() { refreshSlotBadges(); refreshBudget(); refreshPowerMeter(); refreshCompatPanel(); refreshHeroStats(); }
+
+function refreshSlotBadges() {
+  ['cpu','mb','ram','gpu','ssd','psu','cool','case'].forEach(slot=>{
+    const item=buildState[slot]; if(!item) return;
+    const evals=evalItem(slot,item), status=overallStatus(evals);
+    const el=document.getElementById('slot-'+slot);
+    el.classList.remove('slot-error','slot-warn');
+    if(status==='err') el.classList.add('slot-error');
+    else if(status==='warn') el.classList.add('slot-warn');
+    let strip=el.querySelector('.slot-compat');
+    if(!strip){strip=document.createElement('div');strip.className='slot-compat';el.appendChild(strip);}
+    strip.className='slot-compat '+(status==='err'?'err-strip':status==='warn'?'warn-strip':'ok-strip');
+    strip.innerHTML=evals.slice(0,3).map(e=>`<span class="compat-badge ${e.type}">${
+      {ok:'✓',warn:'⚠',err:'✕',rec:'★',btl:'⚡',ins:'⚡'}[e.type]||'·'
+    } ${e.msg}</span>`).join('');
+  });
+}
+
+function refreshBudget() {
+  const total=Object.values(buildState).reduce((a,b)=>a+(b?b.val:0),0);
+  const bt=document.getElementById('budget-total'); if(bt) bt.textContent='R$ '+total.toLocaleString('pt-BR')+',00';
+  const st=document.getElementById('stat-total');   if(st) st.textContent='R$ '+total.toLocaleString('pt-BR');
+  const bi=document.getElementById('budget-items-list');
+  if(bi) {
+    const labels={cpu:'Processador',mb:'Placa-mãe',ram:'RAM',gpu:'GPU',ssd:'SSD',psu:'Fonte',cool:'Cooler',case:'Gabinete'};
+    bi.innerHTML=Object.entries(labels).map(([k,label])=>{
+      const item=buildState[k];
+      const dotCls=item?overallStatus(evalItem(k,item)):'empty';
+      return `<div class="bitem"><span class="name"><span class="bdot ${dotCls}"></span>${label}</span><span class="price${item?'':' empty'}">${item?item.price:'—'}</span></div>`;
+    }).join('');
+  }
+}
+
+function refreshPowerMeter() {
+  const bd=calcPowerDraw(), total=Object.values(bd).reduce((a,v)=>a+v,0);
+  const psu=buildState.psu, psuW=psu?psu.psuW:0;
+  const pmDraw=document.getElementById('pm-draw'); if(pmDraw) pmDraw.textContent=total+'W';
+  const stPow=document.getElementById('stat-power'); if(stPow) stPow.textContent=total+'W';
+  if(psuW) {
+    const pct=Math.min(100,Math.round((total/psuW)*100)), margin=psuW-total;
+    const col=pct>85?'#ef4444':pct>65?'var(--yellow)':'var(--green)';
+    const setProp=(id,val,style)=>{const e=document.getElementById(id);if(e){e.textContent=val;if(style)Object.assign(e.style,style);}};
+    setProp('pm-psu',`Fonte: ${psuW}W`);
+    const bar=document.getElementById('pm-bar'); if(bar){bar.style.width=pct+'%';bar.style.background=col;}
+    setProp('pm-pct',`${pct}% utilizado`);
+    setProp('pm-margin',`${margin}W livre`,{color:col});
+    setProp('stat-psu-margin',(margin>0?'+':'')+margin+'W',{color:pct>85?'var(--accent)':pct>65?'var(--yellow)':'var(--green)'});
+  } else {
+    ['pm-psu','pm-pct','pm-margin'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});
+    const bar=document.getElementById('pm-bar');if(bar)bar.style.width='0%';
+    const ms=document.getElementById('stat-psu-margin');if(ms){ms.textContent='—';ms.style.color='';}
+  }
+  const bk=document.getElementById('pm-breakdown');
+  if(bk) {
+    const rows=[{k:'cpu',l:'CPU'},{k:'gpu',l:'GPU'},{k:'ram',l:'RAM'},{k:'ssd',l:'SSD'},{k:'cool',l:'Cooler'},{k:'misc',l:'Misc'}].filter(r=>bd[r.k]>0);
+    bk.innerHTML=rows.map(r=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span>${r.l}</span><span style="color:var(--text2)">${bd[r.k]}W</span></div>`).join('')
+      +`<div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--text);font-weight:500"><span>TOTAL</span><span>${total}W</span></div>`;
+  }
+}
+
+function refreshCompatPanel() {
+  const panel=document.getElementById('compat-panel-lines'); if(!panel) return;
+  const b=buildState; const lines=[];
+  function add(dotCls,lineCls,text){lines.push(`<div class="compat-line ${lineCls}"><span class="compat-dot ${dotCls}"></span><span class="cl-label ${dotCls==='err'?'err':dotCls==='warn'?'warn':dotCls==='ok'?'ok':''}">${text}</span></div>`);}
+  if(!b.cpu||!b.mb) add('empty','','Socket CPU/MB — aguardando seleção');
+  else if(b.cpu.socket!==b.mb.socket) add('err','err-line',`Socket incompatível: ${b.cpu.socket} ≠ ${b.mb.socket}`);
+  else add('ok','ok-line',`Socket ${b.cpu.socket} — Compatível`);
+  if(!b.ram||!b.mb) add('empty','','RAM — aguardando seleção');
+  else if(b.ram.ramType!==b.mb.ramType) add('err','err-line',`RAM ${b.ram.ramType} ≠ MB ${b.mb.ramType}`);
+  else add('ok','ok-line',`${b.ram.ramType} ${b.ram.gb}GB — Compatível`);
+  if(!b.ssd) add('empty','','Armazenamento — aguardando seleção');
+  else if(b.mb&&b.ssd.ssdType==='NVMe'&&!b.mb.nvme) add('err','err-line','MB sem suporte NVMe');
+  else add('ok','ok-line',`${b.ssd.ssdType} — Compatível com MB`);
+  if(!b.psu) add('empty','','Fonte — aguardando seleção');
+  else { const draw=totalPower(),margin=b.psu.psuW-draw,pct=Math.round((draw/b.psu.psuW)*100);
+    if(margin<0) add('err','err-line',`Fonte ${b.psu.psuW}W insuficiente (~${draw}W)`);
+    else if(pct>85) add('warn','warn-line',`Fonte acima de 85% (${pct}%) — risco de instabilidade`);
+    else add('ok','ok-line',`Fonte ${b.psu.psuW}W — ${margin}W de margem`); }
+  if(!b.cool) add('empty','','Cooler — aguardando seleção');
+  else if(!b.cpu) add('empty','','Cooler — selecione CPU para verificar');
+  else if(!b.cool.sockets.includes(b.cpu.socket)) add('err','err-line',`Cooler não suporta ${b.cpu.socket}`);
+  else if(b.cool.tdpMax<b.cpu.tdp) add('err','err-line',`Cooler insuficiente: ${b.cool.tdpMax}W < TDP ${b.cpu.tdp}W`);
+  else if(b.cool.tdpMax<b.cpu.tdp*1.2) add('warn','warn-line',`Cooler no limite para TDP ${b.cpu.tdp}W`);
+  else add('ok','ok-line',`Cooler OK: ${b.cool.tdpMax}W > TDP ${b.cpu.tdp}W`);
+  if(!b.case) add('empty','','Gabinete — aguardando seleção');
+  else if(b.mb&&b.mb.formFact==='ATX'&&b.case.formFact==='mATX') add('err','err-line','Placa ATX não cabe em gabinete mATX');
+  else add('ok','ok-line',`Gabinete — ${b.mb?b.mb.formFact:'ATX'} compatível`);
+  if(!b.gpu) add('empty','','GPU — aguardando seleção');
+  else if(b.cpu&&b.gpu.tier==='flagship'&&b.cpu.tdp<100) add('warn','warn-line','Possível gargalo: CPU pode limitar GPU flagship');
+  else if(b.mb&&b.gpu.pcie==='PCIe5'&&b.mb.pcie==='PCIe4') add('warn','warn-line','GPU PCIe 5.0 em slot 4.0 — funcional');
+  else add('ok','ok-line','GPU — Sem gargalos detectados');
+  panel.innerHTML=lines.join('');
+}
+
+function refreshHeroStats() {
+  const c=Object.values(buildState).filter(Boolean).length;
+  const el=document.getElementById('stat-slots'); if(el) el.textContent=c+'/8';
+}
+
+refreshAll();
+
+// ── TRADE-IN ESTIMATE ──
+// ── TRADE-IN ESTIMATE ──
+const estimates = {
+  gpu:{ 2024:2800,2023:1600,2022:900,2021:600,2020:350 },
+  cpu:{ 2024:1800,2023:1100,2022:700,2021:450,2020:250 },
+  ram:{ 2024:350,2023:220,2022:150,2021:100,2020:60 },
+  ssd:{ 2024:280,2023:180,2022:120,2021:80,2020:50 },
+  notebook:{ 2024:3200,2023:2000,2022:1200,2021:800,2020:500 },
+  monitor:{ 2024:900,2023:600,2022:400,2021:250,2020:150 },
+  periph:{ 2024:200,2023:140,2022:90,2021:60,2020:40 },
+};
+const condMult = {perfeito:1,bom:.8,regular:.6,ruim:.35};
+let selectedCond = 'perfeito';
+
+function selectCond(el,cond) {
+  document.querySelectorAll('.cond-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  selectedCond = cond;
+  updateEstimate();
+}
+
+function updateEstimate() {
+  const cat = document.getElementById('ti-cat').value;
+  const year = document.getElementById('ti-year').value;
+  const model = document.getElementById('ti-model').value.trim();
+  const vEl = document.getElementById('vp-value');
+  const sEl = document.getElementById('vp-sub');
+  const fEl = document.getElementById('vp-fill');
+  if(!cat||!year||!model) {
+    vEl.textContent = 'R$ —';
+    sEl.textContent = 'Preencha o formulário para ver a estimativa';
+    fEl.style.width='0%';
+    return;
+  }
+  const base = (estimates[cat]&&estimates[cat][year]) || 500;
+  const mult = condMult[selectedCond]||1;
+  const val = Math.round(base * mult);
+  vEl.textContent = 'R$ '+val.toLocaleString('pt-BR')+',00';
+  const pct = Math.min(95,Math.round((val/base)*100));
+  fEl.style.width = pct+'%';
+  const msgs = {perfeito:'Excelente estado — valor máximo',bom:'Bom estado — ótimo valor',regular:'Estado regular — valor reduzido',ruim:'Com defeito — valor mínimo'};
+  sEl.textContent = msgs[selectedCond] || '';
+}
+
+// ── CATEGORY DATA ──
+const categoryData = {
+  gpu: {
+    title: '🎮 Placas de Vídeo',
+    products: [
+      {icon:'🎮',brand:'NVIDIA',name:'RTX 5090 32GB GDDR7 Founders Edition',badge:'new',badgeLabel:'NOVO',old:'R$ 9.499,00',price:'7.999',cents:'00',install:'12x de R$666,58',stars:'★★★★★',reviews:'210'},
+      {icon:'🎮',brand:'ASUS / NVIDIA',name:'RTX 4070 Ti Super ROG Strix OC 16GB GDDR6X',badge:'sale',badgeLabel:'-32%',old:'R$ 5.199,00',price:'3.539',cents:'00',install:'12x de R$294,91',stars:'★★★★★',reviews:'1.432'},
+      {icon:'🎮',brand:'AMD',name:'Radeon RX 7900 XTX 24GB GDDR6 Gaming OC',badge:'hot',badgeLabel:'TOP',old:'R$ 3.899,00',price:'3.299',cents:'00',install:'12x de R$274,91',stars:'★★★★☆',reviews:'892'},
+      {icon:'🎮',brand:'MSI / NVIDIA',name:'RTX 4060 Ti Gaming X Trio 16GB GDDR6',badge:'sale',badgeLabel:'-18%',old:'R$ 2.299,00',price:'1.899',cents:'00',install:'12x de R$158,25',stars:'★★★★★',reviews:'654'},
+      {icon:'🎮',brand:'Gigabyte / AMD',name:'RX 7800 XT Gaming OC 16GB GDDR6 256-bit',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 2.099,00',price:'1.749',cents:'00',install:'6x de R$291,50',stars:'★★★★☆',reviews:'430'},
+      {icon:'🎮',brand:'ZOTAC / NVIDIA',name:'RTX 4090 Trinity OC 24GB GDDR6X',badge:'hot',badgeLabel:'TOP',old:'R$ 12.999,00',price:'10.499',cents:'00',install:'12x de R$874,91',stars:'★★★★★',reviews:'318'},
+      {icon:'🎮',brand:'AMD',name:'Radeon RX 7600 XT 16GB GDDR6 Ventus 2X',badge:'new',badgeLabel:'NOVO',old:'R$ 1.499,00',price:'1.199',cents:'00',install:'6x de R$199,83',stars:'★★★★☆',reviews:'215'},
+      {icon:'🎮',brand:'NVIDIA',name:'RTX 4050 Mobile 8GB GDDR6 — Laptop GPU',badge:'sale',badgeLabel:'-22%',old:'R$ 1.099,00',price:'859',cents:'00',install:'6x de R$143,16',stars:'★★★★☆',reviews:'187'},
+      {icon:'🎮',brand:'Sapphire / AMD',name:'Nitro+ RX 7900 GRE 16GB GDDR6',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 2.799,00',price:'2.399',cents:'00',install:'12x de R$199,91',stars:'★★★★★',reviews:'503'},
+      {icon:'🎮',brand:'ASUS / AMD',name:'ROG Strix RX 7700 XT 12GB GDDR6 OC',badge:'sale',badgeLabel:'-15%',old:'R$ 1.999,00',price:'1.699',cents:'00',install:'6x de R$283,16',stars:'★★★★☆',reviews:'276'},
+    ]
+  },
+  cpu: {
+    title: '⚙️ Processadores',
+    products: [
+      {icon:'⚙️',brand:'AMD',name:'Ryzen 9 9950X 16-Core 4.3GHz Turbo 5.7GHz AM5',badge:'hot',badgeLabel:'TOP',old:'R$ 4.299,00',price:'3.649',cents:'00',install:'12x de R$304,08',stars:'★★★★★',reviews:'892'},
+      {icon:'⚙️',brand:'Intel',name:'Core Ultra 9 285K 24-Core 5.7GHz LGA1851 s/ cooler',badge:'new',badgeLabel:'NOVO',old:'R$ 3.899,00',price:'3.199',cents:'00',install:'12x de R$266,58',stars:'★★★★☆',reviews:'763'},
+      {icon:'⚙️',brand:'AMD',name:'Ryzen 7 9700X 8-Core 3.8GHz AM5 65W TDP',badge:'sale',badgeLabel:'-20%',old:'R$ 1.999,00',price:'1.599',cents:'00',install:'12x de R$133,25',stars:'★★★★★',reviews:'1.204'},
+      {icon:'⚙️',brand:'Intel',name:'Core i9-14900KF 24-Core 6.0GHz LGA1700 s/ iGPU',badge:'sale',badgeLabel:'-25%',old:'R$ 2.999,00',price:'2.249',cents:'00',install:'12x de R$187,41',stars:'★★★★☆',reviews:'645'},
+      {icon:'⚙️',brand:'AMD',name:'Ryzen 5 9600X 6-Core 3.9GHz AM5 Desbloqueado',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 1.399,00',price:'1.099',cents:'00',install:'6x de R$183,16',stars:'★★★★★',reviews:'2.103'},
+      {icon:'⚙️',brand:'Intel',name:'Core i5-14600K 14-Core 5.3GHz LGA1700 Box',badge:'hot',badgeLabel:'TOP',old:'R$ 1.699,00',price:'1.349',cents:'00',install:'6x de R$224,83',stars:'★★★★★',reviews:'1.876'},
+      {icon:'⚙️',brand:'AMD',name:'Ryzen 9 7900X3D 12-Core 5.6GHz AM5 3D V-Cache',badge:'sale',badgeLabel:'-30%',old:'R$ 3.499,00',price:'2.449',cents:'00',install:'12x de R$204,08',stars:'★★★★★',reviews:'534'},
+      {icon:'⚙️',brand:'Intel',name:'Core i3-14100F 4-Core 4.7GHz LGA1700 sem cooler',badge:'sale',badgeLabel:'-10%',old:'R$ 549,00',price:'489',cents:'00',install:'3x de R$163,00',stars:'★★★★☆',reviews:'987'},
+    ]
+  },
+  ram: {
+    title: '🧠 Memória RAM',
+    products: [
+      {icon:'🧠',brand:'G.Skill',name:'Trident Z5 RGB DDR5 32GB 6400MHz CL32 (2×16GB)',badge:'hot',badgeLabel:'TOP',old:'R$ 899,00',price:'749',cents:'00',install:'6x de R$124,83',stars:'★★★★★',reviews:'1.102'},
+      {icon:'🧠',brand:'Corsair',name:'Vengeance DDR5 64GB 6000MHz CL30 (2×32GB) Black',badge:'new',badgeLabel:'NOVO',old:'R$ 1.999,00',price:'1.649',cents:'00',install:'12x de R$137,41',stars:'★★★★☆',reviews:'432'},
+      {icon:'🧠',brand:'Kingston',name:'Fury Beast DDR5 32GB 5200MHz CL40 RGB',badge:'sale',badgeLabel:'-18%',old:'R$ 699,00',price:'579',cents:'00',install:'6x de R$96,50',stars:'★★★★★',reviews:'876'},
+      {icon:'🧠',brand:'G.Skill',name:'Ripjaws S5 DDR5 64GB 6000MHz CL30 Branco',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 1.599,00',price:'1.299',cents:'00',install:'12x de R$108,25',stars:'★★★★☆',reviews:'289'},
+      {icon:'🧠',brand:'TeamGroup',name:'T-Force Delta RGB DDR5 32GB 7200MHz CL34',badge:'sale',badgeLabel:'-22%',old:'R$ 899,00',price:'699',cents:'00',install:'6x de R$116,50',stars:'★★★★★',reviews:'654'},
+      {icon:'🧠',brand:'Corsair',name:'Dominator Titanium DDR5 32GB 7200MHz CL34 White',badge:'hot',badgeLabel:'TOP',old:'R$ 1.399,00',price:'1.099',cents:'00',install:'6x de R$183,16',stars:'★★★★★',reviews:'412'},
+      {icon:'🧠',brand:'Kingston',name:'Fury Renegade DDR5 32GB 7600MHz CL36 RGB',badge:'new',badgeLabel:'NOVO',old:'R$ 1.099,00',price:'899',cents:'00',install:'6x de R$149,83',stars:'★★★★☆',reviews:'198'},
+      {icon:'🧠',brand:'Adata',name:'XPG Lancer RGB DDR5 16GB 6000MHz CL40',badge:'sale',badgeLabel:'-25%',old:'R$ 399,00',price:'299',cents:'00',install:'3x de R$99,66',stars:'★★★★☆',reviews:'543'},
+    ]
+  },
+  ssd: {
+    title: '💾 Armazenamento',
+    products: [
+      {icon:'💾',brand:'Samsung',name:'990 Pro NVMe M.2 2TB PCIe 4.0 — 7450MB/s',badge:'hot',badgeLabel:'TOP',old:'R$ 1.199,00',price:'849',cents:'00',install:'6x de R$141,50',stars:'★★★★★',reviews:'2.341'},
+      {icon:'💾',brand:'WD',name:'Black SN850X 1TB NVMe M.2 PCIe 4.0 — 7300MB/s',badge:'sale',badgeLabel:'-18%',old:'R$ 699,00',price:'569',cents:'00',install:'3x de R$189,66',stars:'★★★★★',reviews:'1.876'},
+      {icon:'💾',brand:'Seagate',name:'Barracuda 510 2TB NVMe M.2 PCIe 4.0 SSD',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 999,00',price:'799',cents:'00',install:'6x de R$133,16',stars:'★★★★☆',reviews:'654'},
+      {icon:'💾',brand:'Kingston',name:'KC3000 4TB NVMe PCIe 4.0 — 7000MB/s',badge:'new',badgeLabel:'NOVO',old:'R$ 2.499,00',price:'1.999',cents:'00',install:'12x de R$166,58',stars:'★★★★★',reviews:'328'},
+      {icon:'💾',brand:'Crucial',name:'T700 2TB PCIe Gen5 NVMe — 12.400MB/s',badge:'hot',badgeLabel:'TOP',old:'R$ 1.899,00',price:'1.499',cents:'00',install:'12x de R$124,91',stars:'★★★★★',reviews:'892'},
+      {icon:'💾',brand:'Seagate',name:'BarraCuda HDD 4TB 3.5" SATA 5400RPM',badge:'sale',badgeLabel:'-20%',old:'R$ 499,00',price:'399',cents:'00',install:'3x de R$133,00',stars:'★★★★☆',reviews:'1.203'},
+      {icon:'💾',brand:'WD',name:'Blue 2TB 2.5" SATA SSD — 560MB/s',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 699,00',price:'549',cents:'00',install:'3x de R$183,00',stars:'★★★★☆',reviews:'765'},
+      {icon:'💾',brand:'Samsung',name:'870 EVO 4TB 2.5" SATA SSD — 560MB/s',badge:'sale',badgeLabel:'-15%',old:'R$ 2.199,00',price:'1.869',cents:'00',install:'12x de R$155,75',stars:'★★★★★',reviews:'987'},
+    ]
+  },
+  psu: {
+    title: '🔌 Fontes de Alimentação',
+    products: [
+      {icon:'🔌',brand:'Corsair',name:'RM1000x 1000W 80+ Gold Full Modular ATX 3.0',badge:'hot',badgeLabel:'TOP',old:'R$ 1.099,00',price:'879',cents:'00',install:'6x de R$146,50',stars:'★★★★★',reviews:'2.109'},
+      {icon:'🔌',brand:'EVGA',name:'SuperNOVA 1000 G7 1000W 80+ Gold Modular',badge:'sale',badgeLabel:'-22%',old:'R$ 1.199,00',price:'949',cents:'00',install:'6x de R$158,16',stars:'★★★★★',reviews:'1.432'},
+      {icon:'🔌',brand:'Seasonic',name:'Focus GX-850 850W 80+ Gold Full Modular',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 899,00',price:'749',cents:'00',install:'6x de R$124,83',stars:'★★★★★',reviews:'876'},
+      {icon:'🔌',brand:'be quiet!',name:'Dark Power 13 1000W 80+ Titanium Modular',badge:'new',badgeLabel:'NOVO',old:'R$ 1.899,00',price:'1.599',cents:'00',install:'12x de R$133,25',stars:'★★★★★',reviews:'324'},
+      {icon:'🔌',brand:'Cooler Master',name:'V850 SFX Gold 850W 80+ Gold Full Modular',badge:'sale',badgeLabel:'-18%',old:'R$ 999,00',price:'819',cents:'00',install:'6x de R$136,50',stars:'★★★★☆',reviews:'543'},
+      {icon:'🔌',brand:'Corsair',name:'SF750 750W 80+ Platinum SFX Full Modular',badge:'hot',badgeLabel:'TOP',old:'R$ 1.299,00',price:'1.099',cents:'00',install:'6x de R$183,16',stars:'★★★★★',reviews:'1.087'},
+      {icon:'🔌',brand:'Seasonic',name:'Prime TX-1000 1000W 80+ Titanium Modular',badge:'sale',badgeLabel:'-12%',old:'R$ 1.999,00',price:'1.759',cents:'00',install:'12x de R$146,58',stars:'★★★★★',reviews:'412'},
+      {icon:'🔌',brand:'EVGA',name:'BQ 600W 80+ Bronze Semi Modular',badge:'sale',badgeLabel:'-25%',old:'R$ 499,00',price:'374',cents:'00',install:'3x de R$124,66',stars:'★★★★☆',reviews:'765'},
+    ]
+  },
+  cool: {
+    title: '❄️ Refrigeração',
+    products: [
+      {icon:'❄️',brand:'Corsair',name:'iCUE H150i Elite LCD XT 360mm AIO — LCD Display',badge:'hot',badgeLabel:'TOP',old:'R$ 1.299,00',price:'999',cents:'00',install:'6x de R$166,50',stars:'★★★★★',reviews:'1.203'},
+      {icon:'❄️',brand:'Noctua',name:'NH-D15 Chromax Black Dual Tower AM5/LGA1851',badge:'hot',badgeLabel:'TOP',old:'R$ 699,00',price:'549',cents:'00',install:'3x de R$183,00',stars:'★★★★★',reviews:'2.876'},
+      {icon:'❄️',brand:'NZXT',name:'Kraken Elite 360 RGB 360mm AIO — LCD',badge:'new',badgeLabel:'NOVO',old:'R$ 1.499,00',price:'1.199',cents:'00',install:'12x de R$99,91',stars:'★★★★★',reviews:'654'},
+      {icon:'❄️',brand:'be quiet!',name:'Dark Rock Pro 5 250W TDP Dual Tower',badge:'sale',badgeLabel:'-15%',old:'R$ 599,00',price:'509',cents:'00',install:'3x de R$169,66',stars:'★★★★★',reviews:'892'},
+      {icon:'❄️',brand:'Arctic',name:'Liquid Freezer III 360 A-RGB AIO 360mm',badge:'sale',badgeLabel:'-20%',old:'R$ 699,00',price:'559',cents:'00',install:'3x de R$186,33',stars:'★★★★★',reviews:'1.432'},
+      {icon:'❄️',brand:'DeepCool',name:'AK620 Digital Dual Tower CPU Cooler AM5',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 399,00',price:'329',cents:'00',install:'3x de R$109,66',stars:'★★★★☆',reviews:'543'},
+      {icon:'❄️',brand:'Lian Li',name:'Galahad II Trinity SL 360mm AIO RGB',badge:'new',badgeLabel:'NOVO',old:'R$ 1.199,00',price:'999',cents:'00',install:'6x de R$166,50',stars:'★★★★★',reviews:'312'},
+      {icon:'❄️',brand:'Thermalright',name:'Peerless Assassin 120 SE ARGB Dual Tower',badge:'sale',badgeLabel:'-30%',old:'R$ 299,00',price:'209',cents:'00',install:'2x de R$104,50',stars:'★★★★★',reviews:'3.201'},
+    ]
+  },
+  periph: {
+    title: '🖱️ Periféricos',
+    products: [
+      {icon:'🖱️',brand:'Logitech',name:'G Pro X Superlight 2 DEX Wireless 32K DPI',badge:'hot',badgeLabel:'TOP',old:'R$ 799,00',price:'619',cents:'00',install:'6x de R$103,16',stars:'★★★★★',reviews:'2.109'},
+      {icon:'⌨️',brand:'Keychron',name:'Q3 Max QMK Wireless Alumínio Gateron Jupiter Red',badge:'new',badgeLabel:'NOVO',old:'R$ 1.099,00',price:'879',cents:'00',install:'6x de R$146,50',stars:'★★★★★',reviews:'498'},
+      {icon:'🎧',brand:'SteelSeries',name:'Arctis Nova Pro Wireless + GameDAC Gen 2',badge:'sale',badgeLabel:'-28%',old:'R$ 1.799,00',price:'1.295',cents:'00',install:'10x de R$129,50',stars:'★★★★☆',reviews:'671'},
+      {icon:'🖱️',brand:'Razer',name:'DeathAdder V3 Pro Wireless 30K DPI Ergonômico',badge:'sale',badgeLabel:'-15%',old:'R$ 699,00',price:'599',cents:'00',install:'6x de R$99,83',stars:'★★★★★',reviews:'1.543'},
+      {icon:'⌨️',brand:'Corsair',name:'K100 RGB Optical-Mechanical Cherry MX',badge:'hot',badgeLabel:'TOP',old:'R$ 1.299,00',price:'1.099',cents:'00',install:'6x de R$183,16',stars:'★★★★☆',reviews:'876'},
+      {icon:'🎧',brand:'HyperX',name:'Cloud Alpha Wireless 300h Battery 2.4GHz',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 799,00',price:'649',cents:'00',install:'6x de R$108,16',stars:'★★★★★',reviews:'2.341'},
+      {icon:'🖱️',brand:'Zowie',name:'EC2-C 3360 Sensor Ergonômico Competitivo',badge:'sale',badgeLabel:'-10%',old:'R$ 449,00',price:'399',cents:'00',install:'3x de R$133,00',stars:'★★★★★',reviews:'1.087'},
+      {icon:'⌨️',brand:'Wooting',name:'60HE Analog Hall Effect Teclado 60%',badge:'new',badgeLabel:'NOVO',old:'R$ 1.499,00',price:'1.299',cents:'00',install:'12x de R$108,25',stars:'★★★★★',reviews:'234'},
+      {icon:'🎧',brand:'Beyerdynamic',name:'MMX 300 Pro Headset Estúdio Aberto 80Ω',badge:'sale',badgeLabel:'-20%',old:'R$ 1.999,00',price:'1.599',cents:'00',install:'12x de R$133,25',stars:'★★★★★',reviews:'187'},
+      {icon:'🖱️',brand:'Pulsar',name:'X2H Mini Wireless 52g 26K DPI Simétrico',badge:'hot',badgeLabel:'TOP',old:'R$ 599,00',price:'499',cents:'00',install:'3x de R$166,33',stars:'★★★★★',reviews:'654'},
+    ]
+  },
+  monitor: {
+    title: '🖥️ Monitores',
+    products: [
+      {icon:'🖥️',brand:'ASUS ROG',name:'Swift OLED PG27AQDP 27" 360Hz 2K OLED 0.03ms',badge:'hot',badgeLabel:'TOP',old:'R$ 5.999,00',price:'4.749',cents:'00',install:'12x de R$395,75',stars:'★★★★★',reviews:'543'},
+      {icon:'🖥️',brand:'LG',name:'UltraGear 27GP950-B 27" 4K 144Hz Nano IPS HDR',badge:'sale',badgeLabel:'-24%',old:'R$ 3.299,00',price:'2.499',cents:'00',install:'12x de R$208,25',stars:'★★★★☆',reviews:'1.203'},
+      {icon:'🖥️',brand:'Samsung',name:'Odyssey G9 49" 32:9 240Hz Curved QLED',badge:'new',badgeLabel:'NOVO',old:'R$ 8.999,00',price:'7.499',cents:'00',install:'12x de R$624,91',stars:'★★★★★',reviews:'312'},
+      {icon:'🖥️',brand:'Dell',name:'Alienware AW2725DF 27" QD-OLED 360Hz 1ms',badge:'hot',badgeLabel:'TOP',old:'R$ 5.499,00',price:'4.299',cents:'00',install:'12x de R$358,25',stars:'★★★★★',reviews:'432'},
+      {icon:'🖥️',brand:'LG',name:'27GR95QE-B 27" OLED 240Hz 2K 0.03ms',badge:'sale',badgeLabel:'-20%',old:'R$ 3.799,00',price:'2.999',cents:'00',install:'12x de R$249,91',stars:'★★★★★',reviews:'876'},
+      {icon:'🖥️',brand:'AOC',name:'AGON AG276QZD2 27" OLED 240Hz 2K HDR',badge:'free',badgeLabel:'Frete Grátis',old:'R$ 3.499,00',price:'2.849',cents:'00',install:'12x de R$237,41',stars:'★★★★☆',reviews:'234'},
+      {icon:'🖥️',brand:'MSI',name:'MAG 341CQP QD-OLED 34" 175Hz Ultrawide',badge:'new',badgeLabel:'NOVO',old:'R$ 4.999,00',price:'3.999',cents:'00',install:'12x de R$333,25',stars:'★★★★★',reviews:'187'},
+      {icon:'🖥️',brand:'Gigabyte',name:'M27Q-SA 27" IPS 180Hz 2K 1ms KVM Switch',badge:'sale',badgeLabel:'-25%',old:'R$ 1.599,00',price:'1.199',cents:'00',install:'12x de R$99,91',stars:'★★★★☆',reviews:'765'},
+    ]
+  }
+};
+
+function navigateCat(cat) {
+  const data = categoryData[cat];
+  if(!data) return;
+  document.getElementById('cat-title-bread').textContent = data.title.replace(/^.{2}/,'');
+  document.getElementById('cat-title-h2').textContent = data.title;
+  document.getElementById('cat-count').textContent = data.products.length + ' produtos';
+  const grid = document.getElementById('cat-products-grid');
+  grid.innerHTML = data.products.map(p => `
+    <div class="pcard" onclick="navigate('product')">
+      <div class="pimg">${p.icon}<span class="pbadge ${p.badge}">${p.badgeLabel}</span><button class="wish" onclick="event.stopPropagation();toggleWish(this)">🤍</button></div>
+      <div class="pinfo">
+        <p class="pbrand">${p.brand}</p>
+        <p class="pname">${p.name}</p>
+        <div class="pstars">${p.stars} <span>(${p.reviews})</span></div>
+        <p class="pold">${p.old}</p>
+        <p class="pprice"><sup>R$</sup>${p.price}<small style="font-size:13px">,${p.cents}</small></p>
+        <p class="pinstall">${p.install} <b>s/ juros</b></p>
+        <button class="padd" onclick="event.stopPropagation();addCart(this)">+ Adicionar</button>
+      </div>
+    </div>
+  `).join('');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-cat').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.subnav a').forEach(a=>a.classList.remove('active'));
+}
+</script>
+</body>
+</html>

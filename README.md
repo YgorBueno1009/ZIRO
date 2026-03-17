@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ZIRO Tech Store — React Frontend
 
 E-commerce de hardware e periféricos, convertido de HTML/JS para React com CSS Modules.
@@ -139,3 +140,7 @@ Verificações implementadas:
 npm run build
 # Gera /dist — pronto para deploy (Vercel, Netlify, S3...)
 ```
+=======
+# ZIRO
+Ecommerce para venda de peças de computadores
+>>>>>>> 2d53e9cb7854c1ac3a92f556cdbaee9bf02bde50
