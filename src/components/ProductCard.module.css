@@ -1,0 +1,2 @@
+.pcard { /* inherits global .pcard */ }
+.added { background: var(--green) !important; border-color: var(--green) !important; color: #0A0A0A !important; }
