@@ -134,13 +134,7 @@ Verificações implementadas:
 - ✅ Gargalo CPU ↔ GPU tier
 - ✅ PCIe 5.0 em slot 4.0
 
-## 📦 Build para produção
-
-```bash
-npm run build
-# Gera /dist — pronto para deploy (Vercel, Netlify, S3...)
-```
 =======
 # ZIRO
 Ecommerce para venda de peças de computadores
->>>>>>> 2d53e9cb7854c1ac3a92f556cdbaee9bf02bde50
+
